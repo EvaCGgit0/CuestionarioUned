@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario: Culturas Tutoriales y Mediación Reflexiva</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f5f7fa; color: #333; line-height: 1.6; }
+        .header { background: linear-gradient(135deg, #1a73e8, #0d47a1); color: white; padding: 40px 20px; text-align: center; }
+        .header h1 { font-size: 1.8em; margin-bottom: 12px; }
+        .header p { opacity: 0.9; font-size: 1em; max-width: 600px; margin: 0 auto; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .info-box { background: white; padding: 24px; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .info-box h2 { color: #1a73e8; font-size: 1.1em; margin-bottom: 12px; }
+        .info-box p { font-size: 0.9em; color: #64748b; margin-bottom: 8px; }
+        .info-box ul { padding-left: 20px; }
+        .info-box li { margin-bottom: 6px; font-size: 0.9em; }
+        .question-card { background: white; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; }
+        .question-header { background: #f8fafc; padding: 20px; border-bottom: 1px solid #e2e8f0; }
+        .question-number { display: inline-block; background: #1a73e8; color: white; padding: 4px 12px; border-radius: 6px; font-weight: 600; font-size: 0.85em; margin-bottom: 8px; }
+        .question-text { font-weight: 600; color: #1e293b; font-size: 1em; }
+        .question-body { padding: 20px; }
+        .required { color: #dc2626; margin-left: 4px; }
+        select { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 1em; background: white; cursor: pointer; transition: border-color 0.2s; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; }
+        select:focus { outline: none; border-color: #1a73e8; }
+        .scale-group { margin-bottom: 20px; }
+        .scale-label { font-size: 0.9em; font-weight: 600; color: #475569; margin-bottom: 12px; display: block; }
+        .scale-options { display: flex; gap: 8px; flex-wrap: wrap; }
+        .scale-option { flex: 1; min-width: 80px; }
+        .scale-option input { display: none; }
+        .scale-option label { display: block; padding: 12px 8px; border: 2px solid #e2e8f0; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.2s; font-size: 0.9em; }
+        .scale-option input:checked + label { background: #1a73e8; color: white; border-color: #1a73e8; }
+        .scale-option label:hover { background: #f1f5f9; }
+        .scale-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.75em; color: #64748b; }
+        textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 1em; resize: vertical; min-height: 100px; transition: border-color 0.2s; }
+        textarea:focus { outline: none; border-color: #1a73e8; }
+        .char-count { text-align: right; font-size: 0.8em; color: #64748b; margin-top: 4px; }
+        .submit-container { text-align: center; margin-top: 40px; }
+        .btn-submit { background: #10b981; color: white; border: none; padding: 16px 48px; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-submit:hover { background: #059669; transform: translateY(-2px); }
+        .btn-submit:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
+        .progress-bar { background: #e2e8f0; height: 8px; border-radius: 4px; margin-bottom: 24px; overflow: hidden; }
+        .progress-fill { background: #10b981; height: 100%; border-radius: 4px; transition: width 0.3s ease; width: 0%; }
+        .progress-text { text-align: center; font-size: 0.85em; color: #64748b; margin-bottom: 8px; }
+        .success-message { display: none; background: #ecfdf5; border: 2px solid #10b981; border-radius: 12px; padding: 40px; text-align: center; margin-top: 20px; }
+        .success-message h2 { color: #059669; margin-bottom: 12px; }
+        .error-message { background: #fef2f2; border: 2px solid #dc2626; border-radius: 8px; padding: 16px; margin-bottom: 20px; color: #dc2626; display: none; }
+        .section-divider { background: #f1f5f9; padding: 12px 20px; font-weight: 600; color: #475569; font-size: 0.9em; border-bottom: 1px solid #e2e8f0; }
+        @media (max-width: 600px) {
+            .scale-options { flex-direction: column; }
+            .scale-option { min-width: 100%; }
+            .header h1 { font-size: 1.4em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Culturas Tutoriales y Mediación Reflexiva</h1>
+        <p>Investigación sobre estilos tutorial y su relación con la escritura reflexiva en diarios de prácticas</p>
+    </div>
+
+    <div class="container">
+        <div class="info-box">
+            <h2>Sobre este cuestionario</h2>
+            <p>Este cuestionario forma parte de una investigación doctoral sobre las culturas tutoriales en el prácticum de la UNED. Tu participación es anónima y voluntaria.</p>
+            <p><strong>Tiempo estimado:</strong> 5-7 minutos</p>
+            <ul>
+                <li>Todas las preguntas son importantes para la investigación</li>
+                <li>No hay respuestas correctas o incorrectas</li>
+                <li>Tus respuestas serán tratadas con confidencialidad</li>
+            </ul>
+        </div>
+
+        <div class="progress-text">Progreso: <span id="progressPercent">0</span>% completado</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+        <div class="error-message" id="errorMessage">
+            Por favor, completa todas las preguntas marcadas con asterisco (*) antes de enviar.
+        </div>
+
+        <form id="cuestionarioForm">
+
+            <!-- SECCIÓN 1: DATOS PERSONALES -->
+            <div class="section-divider">SECCIÓN 1: DATOS PERSONALES</div>
+
+            <!-- P0 -->
+            <div class="question-card" data-question="p0">
+                <div class="question-header">
+                    <span class="question-number">P0</span>
+                    <span class="question-text">Centro Asociado UNED en el que tutorizas<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <select name="p0" required>
+                        <option value="">Selecciona tu Centro Asociado...</option>
+                        <option value="Ávila">Ávila</option>
+                        <option value="Alcalá de Henares">Alcalá de Henares</option>
+                        <option value="Alcobendas">Alcobendas</option>
+                        <option value="Alicante">Alicante</option>
+                        <option value="Almería">Almería</option>
+                        <option value="Aragon">Aragón</option>
+                        <option value="Badajoz">Badajoz</option>
+                        <option value="Barcelona">Barcelona</option>
+                        <option value="Burgos">Burgos</option>
+                        <option value="Cáceres">Cáceres</option>
+                        <option value="Cádiz">Cádiz</option>
+                        <option value="Castellón">Castellón</option>
+                        <option value="Ceuta">Ceuta</option>
+                        <option value="Ciudad Real">Ciudad Real</option>
+                        <option value="Córdoba">Córdoba</option>
+                        <option value="Cuenca">Cuenca</option>
+                        <option value="Extremadura">Extremadura</option>
+                        <option value="Galicia">Galicia</option>
+                        <option value="Girona">Girona</option>
+                        <option value="Granada">Granada</option>
+                        <option value="Guadalajara">Guadalajara</option>
+                        <option value="Huelva">Huelva</option>
+                        <option value="Huesca">Huesca</option>
+                        <option value="Illes Balears">Illes Balears</option>
+                        <option value="Jaén">Jaén</option>
+                        <option value="La Rioja">La Rioja</option>
+                        <option value="León">León</option>
+                        <option value="Lleida">Lleida</option>
+                        <option value="Lugo">Lugo</option>
+                        <option value="Madrid">Madrid</option>
+                        <option value="Melilla">Melilla</option>
+                        <option value="Murcia">Murcia</option>
+                        <option value="Navarra">Navarra</option>
+                        <option value="Ourense">Ourense</option>
+                        <option value="Palencia">Palencia</option>
+                        <option value="Pontevedra">Pontevedra</option>
+                        <option value="Salamanca">Salamanca</option>
+                        <option value="San Sebastián">San Sebastián</option>
+                        <option value="Santa Cruz de Tenerife">Santa Cruz de Tenerife</option>
+                        <option value="Santander">Santander</option>
+                        <option value="Segovia">Segovia</option>
+                        <option value="Sevilla">Sevilla</option>
+                        <option value="Soria">Soria</option>
+                        <option value="Tarragona">Tarragona</option>
+                        <option value="Teruel">Teruel</option>
+                        <option value="Toledo">Toledo</option>
+                        <option value="Valencia">Valencia</option>
+                        <option value="Valladolid">Valladolid</option>
+                        <option value="Vizcaya">Vizcaya</option>
+                        <option value="Zamora">Zamora</option>
+                        <option value="Zaragoza">Zaragoza</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- P1 -->
+            <div class="question-card" data-question="p1">
+                <div class="question-header">
+                    <span class="question-number">P1</span>
+                    <span class="question-text">Identidad de género<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <select name="p1" required>
+                        <option value="">Selecciona...</option>
+                        <option value="Mujer">Mujer</option>
+                        <option value="Hombre">Hombre</option>
+                        <option value="No binario">No binario</option>
+                        <option value="Prefiero no decir">Prefiero no decir</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- P2 -->
+            <div class="question-card" data-question="p2">
+                <div class="question-header">
+                    <span class="question-number">P2</span>
+                    <span class="question-text">¿Cuántos años de experiencia tienes como tutor/a de prácticas?<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <select name="p2" required>
+                        <option value="">Selecciona...</option>
+                        <option value="Primer año">Primer año</option>
+                        <option value="1-2 años">1-2 años</option>
+                        <option value="3-5 años">3-5 años</option>
+                        <option value="Más de 5 años">Más de 5 años</option>
+                        <option value="No soy profesor(a) tutor(a) de práctica">No soy profesor(a) tutor(a) de práctica</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- P3 -->
+            <div class="question-card" data-question="p3">
+                <div class="question-header">
+                    <span class="question-number">P3</span>
+                    <span class="question-text">¿Cuál es tu máximo nivel de estudios?<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <select name="p3" required>
+                        <option value="">Selecciona...</option>
+                        <option value="Grado / Licenciatura">Grado / Licenciatura</option>
+                        <option value="Máster">Máster</option>
+                        <option value="Doctorado">Doctorado</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- P4 -->
+            <div class="question-card" data-question="p4">
+                <div class="question-header">
+                    <span class="question-number">P4</span>
+                    <span class="question-text">¿Has recibido formación previa sobre el uso del diario reflexivo?<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <select name="p4" required>
+                        <option value="">Selecciona...</option>
+                        <option value="Sí, formación específica">Sí, formación específica</option>
+                        <option value="No, solo referencias generales">No, solo referencias generales</option>
+                        <option value="No, es la primera vez que lo abordo">No, es la primera vez que lo abordo</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- P5 -->
+            <div class="question-card" data-question="p5">
+                <div class="question-header">
+                    <span class="question-number">P5</span>
+                    <span class="question-text">Facultad/Escuela en la que tutorizas<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <select name="p5" required>
+                        <option value="">Selecciona...</option>
+                        <option value="Ciencias Económicas y Empresariales">Ciencias Económicas y Empresariales</option>
+                        <option value="Ciencias Políticas y Sociología">Ciencias Políticas y Sociología</option>
+                        <option value="Derecho">Derecho</option>
+                        <option value="Educación">Educación</option>
+                        <option value="Filosofía">Filosofía</option>
+                        <option value="Geografía e Historia">Geografía e Historia</option>
+                        <option value="Informática">Informática</option>
+                        <option value="Letras">Letras</option>
+                        <option value="Medicina">Medicina</option>
+                        <option value="Psicología">Psicología</option>
+                        <option value="Turismo">Turismo</option>
+                        <option value="Otra">Otra</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: PRÁCTICA TUTORIAL -->
+            <div class="section-divider">SECCIÓN 2: PRÁCTICA TUTORIAL</div>
+
+            <!-- P6 - IDX_SOSTEN -->
+            <div class="question-card" data-question="p6">
+                <div class="question-header">
+                    <span class="question-number">P6</span>
+                    <span class="question-text">Cuando un estudiante tiene dificultades emocionales en las prácticas, ¿con qué frecuencia le ofreces un espacio de escucha sin juzgar?<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <div class="scale-group">
+                        <div class="scale-options">
+                            <div class="scale-option"><input type="radio" name="p6" value="1" id="p6_1" required><label for="p6_1">1</label></div>
+                            <div class="scale-option"><input type="radio" name="p6" value="2" id="p6_2"><label for="p6_2">2</label></div>
+                            <div class="scale-option"><input type="radio" name="p6" value="3" id="p6_3"><label for="p6_3">3</label></div>
+                            <div class="scale-option"><input type="radio" name="p6" value="4" id="p6_4"><label for="p6_4">4</label></div>
+                            <div class="scale-option"><input type="radio" name="p6" value="5" id="p6_5"><label for="p6_5">5</label></div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>Nunca</span>
+                            <span>Raramente</span>
+                            <span>A veces</span>
+                            <span>Frecuentemente</span>
+                            <span>Siempre</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P7 - IDX_SOSTEN -->
+            <div class="question-card" data-question="p7">
+                <div class="question-header">
+                    <span class="question-number">P7</span>
+                    <span class="question-text">Cuando un estudiante solo describe sin profundizar en su diario, ¿con qué frecuencia le haces preguntas abiertas para invitarle a reflexionar?<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <div class="scale-group">
+                        <div class="scale-options">
+                            <div class="scale-option"><input type="radio" name="p7" value="1" id="p7_1" required><label for="p7_1">1</label></div>
+                            <div class="scale-option"><input type="radio" name="p7" value="2" id="p7_2"><label for="p7_2">2</label></div>
+                            <div class="scale-option"><input type="radio" name="p7" value="3" id="p7_3"><label for="p7_3">3</label></div>
+                            <div class="scale-option"><input type="radio" name="p7" value="4" id="p7_4"><label for="p7_4">4</label></div>
+                            <div class="scale-option"><input type="radio" name="p7" value="5" id="p7_5"><label for="p7_5">5</label></div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>Nunca</span>
+                            <span>Raramente</span>
+                            <span>A veces</span>
+                            <span>Frecuentemente</span>
+                            <span>Siempre</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P8 - IDX_TECNICO -->
+            <div class="question-card" data-question="p8">
+                <div class="question-header">
+                    <span class="question-number">P8</span>
+                    <span class="question-text">¿Con qué frecuencia le pides al estudiante que conecte su experiencia con referentes teóricos?<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <div class="scale-group">
+                        <div class="scale-options">
+                            <div class="scale-option"><input type="radio" name="p8" value="1" id="p8_1" required><label for="p8_1">1</label></div>
+                            <div class="scale-option"><input type="radio" name="p8" value="2" id="p8_2"><label for="p8_2">2</label></div>
+                            <div class="scale-option"><input type="radio" name="p8" value="3" id="p8_3"><label for="p8_3">3</label></div>
+                            <div class="scale-option"><input type="radio" name="p8" value="4" id="p8_4"><label for="p8_4">4</label></div>
+                            <div class="scale-option"><input type="radio" name="p8" value="5" id="p8_5"><label for="p8_5">5</label></div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>Nunca</span>
+                            <span>Raramente</span>
+                            <span>A veces</span>
+                            <span>Frecuentemente</span>
+                            <span>Siempre</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P9 - IDX_TECNICO -->
+            <div class="question-card" data-question="p9">
+                <div class="question-header">
+                    <span class="question-number">P9</span>
+                    <span class="question-text">¿Con qué frecuencia reformulas lo que el estudiante expresa en términos más profesionales o académicos?<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <div class="scale-group">
+                        <div class="scale-options">
+                            <div class="scale-option"><input type="radio" name="p9" value="1" id="p9_1" required><label for="p9_1">1</label></div>
+                            <div class="scale-option"><input type="radio" name="p9" value="2" id="p9_2"><label for="p9_2">2</label></div>
+                            <div class="scale-option"><input type="radio" name="p9" value="3" id="p9_3"><label for="p9_3">3</label></div>
+                            <div class="scale-option"><input type="radio" name="p9" value="4" id="p9_4"><label for="p9_4">4</label></div>
+                            <div class="scale-option"><input type="radio" name="p9" value="5" id="p9_5"><label for="p9_5">5</label></div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>Nunca</span>
+                            <span>Raramente</span>
+                            <span>A veces</span>
+                            <span>Frecuentemente</span>
+                            <span>Siempre</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P10 - Variable de validación -->
+            <div class="question-card" data-question="p10">
+                <div class="question-header">
+                    <span class="question-number">P10</span>
+                    <span class="question-text">¿Con qué afirmación te identificas más en tu rol tutorial?<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <select name="p10" required>
+                        <option value="">Selecciona la opción que mejor te represente...</option>
+                        <option value="A">Me enfoco en acompañar desde la cercanía y la escucha</option>
+                        <option value="B">Me centro en el desarrollo profesional y técnico del estudiante</option>
+                        <option value="C">Intento equilibrar lo emocional, lo pedagógico y lo institucional</option>
+                        <option value="D">Sigo descubriendo cuál es mi estilo propio como tutor/a</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: HERRAMIENTAS Y COMPETENCIAS -->
+            <div class="section-divider">SECCIÓN 3: HERRAMIENTAS Y COMPETENCIAS</div>
+
+            <!-- P11 -->
+            <div class="question-card" data-question="p11">
+                <div class="question-header">
+                    <span class="question-number">P11</span>
+                    <span class="question-text">¿Con qué frecuencia utilizas el diario reflexivo como herramienta de acompañamiento?<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <div class="scale-group">
+                        <div class="scale-options">
+                            <div class="scale-option"><input type="radio" name="p11" value="1" id="p11_1" required><label for="p11_1">1</label></div>
+                            <div class="scale-option"><input type="radio" name="p11" value="2" id="p11_2"><label for="p11_2">2</label></div>
+                            <div class="scale-option"><input type="radio" name="p11" value="3" id="p11_3"><label for="p11_3">3</label></div>
+                            <div class="scale-option"><input type="radio" name="p11" value="4" id="p11_4"><label for="p11_4">4</label></div>
+                            <div class="scale-option"><input type="radio" name="p11" value="5" id="p11_5"><label for="p11_5">5</label></div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>Nunca</span>
+                            <span>Raramente</span>
+                            <span>A veces</span>
+                            <span>Frecuentemente</span>
+                            <span>Siempre</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P12 -->
+            <div class="question-card" data-question="p12">
+                <div class="question-header">
+                    <span class="question-number">P12</span>
+                    <span class="question-text">¿Cuál es el mayor desafío que enfrentas al fomentar la reflexión profunda en los estudiantes?<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <textarea name="p12" placeholder="Describe brevemente el mayor desafío que enfrentas..." minlength="10" maxlength="300" required></textarea>
+                    <div class="char-count"><span id="p12_count">0</span>/300 caracteres</div>
+                </div>
+            </div>
+
+            <!-- P13 -->
+            <div class="question-card" data-question="p13">
+                <div class="question-header">
+                    <span class="question-number">P13</span>
+                    <span class="question-text">¿Con qué frecuencia adaptas tus estrategias de acompañamiento a las necesidades específicas de cada estudiante?<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <div class="scale-group">
+                        <div class="scale-options">
+                            <div class="scale-option"><input type="radio" name="p13" value="1" id="p13_1" required><label for="p13_1">1</label></div>
+                            <div class="scale-option"><input type="radio" name="p13" value="2" id="p13_2"><label for="p13_2">2</label></div>
+                            <div class="scale-option"><input type="radio" name="p13" value="3" id="p13_3"><label for="p13_3">3</label></div>
+                            <div class="scale-option"><input type="radio" name="p13" value="4" id="p13_4"><label for="p13_4">4</label></div>
+                            <div class="scale-option"><input type="radio" name="p13" value="5" id="p13_5"><label for="p13_5">5</label></div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>Nunca</span>
+                            <span>Raramente</span>
+                            <span>A veces</span>
+                            <span>Frecuentemente</span>
+                            <span>Siempre</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P14 -->
+            <div class="question-card" data-question="p14">
+                <div class="question-header">
+                    <span class="question-number">P14</span>
+                    <span class="question-text">¿Qué nivel de competencia digital consideras que tienes para el acompañamiento tutorial?<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <select name="p14" required>
+                        <option value="">Selecciona...</option>
+                        <option value="Bajo - Necesito formación">Bajo - Necesito formación</option>
+                        <option value="Básico - Uso herramientas simples">Básico - Uso herramientas simples</option>
+                        <option value="Intermedio - Domino herramientas principales">Intermedio - Domino herramientas principales</option>
+                        <option value="Avanzado - Innovo con tecnología">Avanzado - Innovo con tecnología</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- P15 -->
+            <div class="question-card" data-question="p15">
+                <div class="question-header">
+                    <span class="question-number">P15</span>
+                    <span class="question-text">¿Te gustaría participar en una investigación posterior sobre tutoría y escritura reflexiva?<span class="required">*</span></span>
+                </div>
+                <div class="question-body">
+                    <select name="p15" required>
+                        <option value="">Selecciona...</option>
+                        <option value="Sí">Sí</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="submit-container">
+                <button type="submit" class="btn-submit" id="submitBtn">Enviar cuestionario</button>
+            </div>
+        </form>
+
+        <div class="success-message" id="successMessage">
+            <h2>¡Cuestionario enviado correctamente!</h2>
+            <p>Gracias por tu participación. Tu aportación es muy valiosa para esta investigación.</p>
+            <p style="margin-top: 16px; font-size: 0.9em; color: #64748b;">Si tienes alguna duda, contacta con evacatano@sevilla.uned.es</p>
+        </div>
+    </div>
+
+    <script>
+        // Contador de caracteres para P12
+        const p12Textarea = document.querySelector('textarea[name="p12"]');
+        const p12Count = document.getElementById('p12_count');
+        
+        p12Textarea.addEventListener('input', function() {
+            p12Count.textContent = this.value.length;
+        });
+
+        // Progreso
+        function updateProgress() {
+            const questions = ['p0','p1','p2','p3','p4','p5','p6','p7','p8','p9','p10','p11','p12','p13','p14','p15'];
+            let answered = 0;
+            
+            questions.forEach(q => {
+                const element = document.querySelector(`[name="${q}"]`);
+                if (element) {
+                    if (element.type === 'radio') {
+                        if (document.querySelector(`[name="${q}"]:checked`)) answered++;
+                    } else if (element.tagName === 'SELECT') {
+                        if (element.value) answered++;
+                    } else if (element.tagName === 'TEXTAREA') {
+                        if (element.value.trim().length >= 10) answered++;
+                    }
+                }
+            });
+            
+            const percent = Math.round((answered / questions.length) * 100);
+            document.getElementById('progressPercent').textContent = percent;
+            document.getElementById('progressFill').style.width = percent + '%';
+        }
+
+        // Actualizar progreso al cambiar cualquier campo
+        document.querySelectorAll('input, select, textarea').forEach(el => {
+            el.addEventListener('change', updateProgress);
+            el.addEventListener('input', updateProgress);
+        });
+
+        // Validar y enviar
+        document.getElementById('cuestionarioForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Verificar todos los campos requeridos
+            let isValid = true;
+            const requiredFields = this.querySelectorAll('[required]');
+            
+            requiredFields.forEach(field => {
+                if (field.type === 'radio') {
+                    const name = field.name;
+                    if (!document.querySelector(`[name="${name}"]:checked`)) {
+                        isValid = false;
+                    }
+                } else if (!field.value.trim()) {
+                    isValid = false;
+                }
+            });
+            
+            if (!isValid) {
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('errorMessage').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            
+            document.getElementById('errorMessage').style.display = 'none';
+            
+            // Recopilar datos
+            const formData = new FormData(this);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            
+            // Enviar con FormSubmit.co
+            fetch('https://formsubmit.co/ajax/evacatano@sevilla.uned.es', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    _subject: `Cuestionario Culturas Tutoriales - ${data.p0 || 'Sin centro'}`,
+                    _template: 'table',
+                    _captcha: 'false',
+                    ...data
+                })
+            }).then(function(response) {
+                document.getElementById('cuestionarioForm').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+                document.querySelector('.progress-bar').style.display = 'none';
+                document.querySelector('.progress-text').style.display = 'none';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }).catch(function(error) {
+                alert('Error al enviar. Por favor, intenta de nuevo.');
+            });
+        });
+    </script>
+</body>
+</html>
