@@ -1,0 +1,110 @@
+CUESTIONARIO: CULTURAS TUTORIALES Y MEDIACIÓN REFLEXIVA
+========================================================
+Versión 2.0 - Actualizado según especificaciones de la investigadora
+
+Investigación sobre estilos tutorial y su relación con la escritura reflexiva en diarios de prácticas
+
+SOBRE ESTE CUESTIONARIO
+-----------------------
+Este cuestionario forma parte de una investigación doctoral sobre las culturas tutoriales en el prácticum de la UNED. Tu participación es anónima y voluntaria.
+
+Tiempo estimado: 5-7 minutos
+• Todas las preguntas son importantes para la investigación
+• No hay respuestas correctas o incorrectas
+• Tus respuestas serán tratadas con confidencialidad
+
+
+SECCIÓN 1: DATOS PERSONALES
+----------------------------
+(Se mantiene sin cambios)
+
+P0. Centro Asociado UNED en el que tutorizas *
+Opciones: 52 Centros Asociados UNED (ver lista completa en formulario online)
+
+P1. Identidad de género *
+Opciones: Mujer | Hombre | No binario | Prefiero no decir
+
+P2. ¿Cuántos años de experiencia tienes como tutor/a de prácticas? *
+Opciones: Primer año | 1-2 años | 3-5 años | Más de 5 años | No soy profesor(a) tutor(a) de práctica
+
+P3. ¿Cuál es tu máximo nivel de estudios? *
+Opciones: Grado / Licenciatura | Máster | Doctorado | Otro
+
+P4. ¿Has recibido formación previa sobre el uso del diario reflexivo? *
+Opciones: Sí, formación específica | No, solo referencias generales | No, es la primera vez que lo abordo
+
+P5. Facultad/Escuela en la que tutorizas *
+Opciones: Ciencias Económicas y Empresariales | Ciencias Políticas y Sociología | Derecho | Educación | Filosofía | Geografía e Historia | Informática | Letras | Medicina | Psicología | Turismo | Otra
+
+
+SECCIÓN 2: CÓMO ACOMPAÑAS
+---------------------------
+(Nueva versión con metáforas visuales)
+
+P6. Cuando un estudiante tiene dificultades emocionales en las prácticas, ¿con qué frecuencia le ofreces un espacio de escucha sin juzgar? *
+Escala 1-5: 1-Nunca | 2-Raramente | 3-A veces | 4-Frecuentemente | 5-Siempre
+Variable: IDX_SOSTEN (índice de sostenimiento emocional)
+
+P7. Cuando un estudiante solo describe sin profundizar en su diario, ¿con qué frecuencia le haces preguntas abiertas para invitarle a reflexionar? *
+Escala 1-5: 1-Nunca | 2-Raramente | 3-A veces | 4-Frecuentemente | 5-Siempre
+Variable: IDX_SOSTEN (índice de sostenimiento emocional)
+
+P8. ¿Con qué frecuencia le pides al estudiante que conecte su experiencia con referentes teóricos? *
+Escala 1-5: 1-Nunca | 2-Raramente | 3-A veces | 4-Frecuentemente | 5-Siempre
+Variable: IDX_TECNICO (índice de mediación técnica)
+
+P9. ¿Con qué frecuencia reformulas lo que el estudiante expresa en términos más profesionales o académicos? *
+Escala 1-5: 1-Nunca | 2-Raramente | 3-A veces | 4-Frecuentemente | 5-Siempre
+Variable: IDX_TECNICO (índice de mediación técnica)
+
+P10. ¿Qué imagen mejor describe tu estilo de tutoría? *
+Opciones:
+🌱 Guiar desde la cercanía y la escucha
+🔧 Centrarme en el desarrollo profesional y técnico
+⚖️ Equilibrar lo emocional, lo pedagógico y lo institucional
+🔄 Seguir descubriendo mi estilo propio
+Variable: Validación del cuadrante calculado
+
+
+SECCIÓN 3: HERRAMIENTAS Y COMPETENCIAS
+----------------------------------------
+(Con cambios específicos solicitados)
+
+P11. ¿Con qué frecuencia utilizas el diario reflexivo como herramienta de acompañamiento? *
+Escala 1-5: 1-Nunca | 2-Raramente | 3-A veces | 4-Frecuentemente | 5-Siempre
+
+P12. Imagina que un estudiante te dice: "Mi diario es solo una lista de cosas que hice". ¿Qué harías primero? *
+Opciones:
+A) Le preguntaría qué emoción tuvo en cada momento
+B) Le pediría que conectara con algún concepto teórico
+C) Le sugeriría comparar su experiencia con la de otros compañeros
+D) Le dejaría que continuara a su ritmo y volvería a preguntar después
+
+P13. ¿Con qué frecuencia adaptas tus estrategias de acompañamiento a las necesidades específicas de cada estudiante? *
+Escala 1-5: 1-Nunca | 2-Raramente | 3-A veces | 4-Frecuentemente | 5-Siempre
+
+P14. ¿Cómo valoras tu competencia digital para el acompañamiento? *
+Opciones:
+🟠 Básica - Uso herramientas simples
+🟡 Intermedia - Domino herramientas principales
+🟢 Avanzada - Innovo con tecnología
+
+P15. ¿Qué necesitarías para mejorar tu acompañamiento reflexivo? *
+Tipo: Texto libre (mínimo 10, máximo 300 caracteres)
+
+P16. ¿Te gustaría participar en una investigación posterior sobre tutoría y escritura reflexiva? *
+Opciones: Sí | No
+
+
+NOTAS PARA EL ANÁLISIS
+-----------------------
+IDX_SOSTEN = (P6 + P7) / 2 → Índice de sostenimiento emocional
+IDX_TECNICO = (P8 + P9) / 2 → Índice de mediación técnica
+P10 valida el cuadrante calculado por IDX_SOSTEN e IDX_TECNICO
+P12 mide la orientación de la mediación reflexiva
+P14 evalúa la auto percepción de competencia digital
+
+URL del cuestionario online: https://evacggit0.github.io/CuestionarioUned/cuestionario.html
+Fecha de creación: Agosto 2026
+Fecha de actualización: Agosto 2026
+Investigadora: Eva Cañano Catano - evacatano@sevilla.uned.es
