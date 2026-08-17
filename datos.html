@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos del Cuestionario - Culturas Tutoriales</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f5f7fa; color: #333; line-height: 1.6; }
+        .header { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 40px 20px; text-align: center; }
+        .header h1 { font-size: 1.8em; margin-bottom: 12px; }
+        .header p { opacity: 0.9; font-size: 1em; }
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+        .card { background: white; border-radius: 16px; padding: 40px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
+        .card h2 { color: #10b981; font-size: 1.3em; margin-bottom: 12px; }
+        .card p { color: #64748b; margin-bottom: 24px; }
+        .btn { display: inline-block; padding: 16px 40px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.1em; transition: all 0.2s; margin: 8px; }
+        .btn-green { background: #10b981; color: white; }
+        .btn-green:hover { background: #059669; transform: translateY(-2px); }
+        .btn-blue { background: #3b82f6; color: white; }
+        .btn-blue:hover { background: #2563eb; transform: translateY(-2px); }
+        .btn-purple { background: #8b5cf6; color: white; }
+        .btn-purple:hover { background: #7c3aed; transform: translateY(-2px); }
+        .info { background: #f0fdf4; border: 1px solid #10b981; border-radius: 8px; padding: 20px; margin-top: 24px; }
+        .info h3 { color: #059669; margin-bottom: 8px; }
+        .info ul { padding-left: 20px; }
+        .info li { margin-bottom: 4px; font-size: 0.9em; }
+        .footer { text-align: center; padding: 40px 20px; color: #64748b; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Datos del Cuestionario</h1>
+        <p>Accede a las respuestas de los tutores en tiempo real</p>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>📊 Google Sheet (Datos en tiempo real)</h2>
+            <p>Abre el Google Sheet para ver todas las respuestas actualizadas automáticamente.</p>
+            <a href="https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms/edit?usp=sharing" class="btn btn-green" target="_blank">Abrir Google Sheet</a>
+        </div>
+
+        <div class="card">
+            <h2>📥 Exportar a CSV</h2>
+            <p>Descarga todas las respuestas en formato CSV para analizar en Excel o SPSS.</p>
+            <a href="https://api.sheetbest.com/sheets/302efe9f-81e2-4fb2-af49-30ac8e139319/csv" class="btn btn-blue" download="cuestionario_culturas_tutoriales.csv">Descargar CSV</a>
+        </div>
+
+        <div class="card">
+            <h2>🔗 Enlaces rápidos</h2>
+            <p>Accede directamente a las herramientas de la investigación.</p>
+            <a href="https://evacggit0.github.io/CuestionarioUned/cuestionario.html" class="btn btn-purple" target="_blank">Cuestionario para Tutores</a>
+            <a href="https://evacggit0.github.io/CuestionarioUned/revision.html" class="btn btn-purple" target="_blank">Revisión para Coautores</a>
+        </div>
+
+        <div class="info">
+            <h3>ℹ️ Instrucciones</h3>
+            <ul>
+                <li><strong>Google Sheet:</strong> Se actualiza automáticamente cuando un tutor envía el cuestionario</li>
+                <li><strong>CSV:</strong> Haz clic en "Descargar CSV" para obtener los datos actualizados</li>
+                <li><strong>Análisis:</strong> Puedes importar el CSV directamente en Excel, SPSS o R</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Investigación doctoral · UNED Sevilla · evacatano@sevilla.uned.es</p>
+    </div>
+</body>
+</html>

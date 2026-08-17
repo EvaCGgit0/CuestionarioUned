@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revisión del Cuestionario - Culturas Tutoriales</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f4f8; color: #333; line-height: 1.6; }
+        .header { background: linear-gradient(135deg, #1a73e8, #0d47a1); color: white; padding: 30px 20px; text-align: center; }
+        .header h1 { font-size: 1.5em; margin-bottom: 8px; }
+        .header p { opacity: 0.9; font-size: 0.9em; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .info-box { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .info-box h2 { color: #1a73e8; font-size: 1.1em; margin-bottom: 10px; }
+        .info-box ul { padding-left: 20px; }
+        .info-box li { margin-bottom: 6px; font-size: 0.9em; }
+        .question-card { background: white; border-radius: 12px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; border-left: 4px solid #1a73e8; }
+        .question-header { background: #f8fafc; padding: 16px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 12px; }
+        .question-id { background: #1a73e8; color: white; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.85em; }
+        .question-text { font-weight: 600; color: #1e293b; flex: 1; }
+        .question-meta { padding: 12px 16px; background: #f1f5f9; font-size: 0.85em; color: #64748b; display: flex; gap: 20px; flex-wrap: wrap; }
+        .question-body { padding: 16px; }
+        .options-preview { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 16px; }
+        .options-preview h4 { font-size: 0.85em; color: #475569; margin-bottom: 8px; }
+        .options-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        .option-item { background: white; border: 1px solid #e2e8f0; padding: 6px 12px; border-radius: 6px; font-size: 0.8em; }
+        .option-item.scale { background: #eff6ff; border-color: #3b82f6; color: #1e40af; }
+        .rating-group { margin-bottom: 16px; }
+        .rating-label { font-size: 0.9em; font-weight: 600; color: #475569; margin-bottom: 8px; display: block; }
+        .rating-options { display: flex; gap: 8px; }
+        .rating-option { flex: 1; }
+        .rating-option input { display: none; }
+        .rating-option label { display: block; padding: 10px 8px; border: 2px solid #e2e8f0; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.2s; font-size: 0.85em; }
+        .rating-option input:checked + label { background: #1a73e8; color: white; border-color: #1a73e8; }
+        .rating-option label:hover { background: #f1f5f9; }
+        .comment-section { margin-top: 12px; }
+        .comment-section label { font-size: 0.9em; font-weight: 600; color: #475569; margin-bottom: 8px; display: block; }
+        .comment-section textarea { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 0.9em; resize: vertical; min-height: 80px; transition: border-color 0.2s; }
+        .comment-section textarea:focus { outline: none; border-color: #1a73e8; }
+        .submit-container { text-align: center; margin-top: 30px; }
+        .btn-submit { background: #10b981; color: white; border: none; padding: 16px 40px; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-submit:hover { background: #059669; transform: translateY(-2px); }
+        .success-message { display: none; background: #ecfdf5; border: 2px solid #10b981; border-radius: 12px; padding: 30px; text-align: center; margin-top: 20px; }
+        .success-message h2 { color: #059669; margin-bottom: 10px; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+        .stat-box { background: white; padding: 16px; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .stat-number { font-size: 1.8em; font-weight: 700; color: #1a73e8; }
+        .stat-label { font-size: 0.8em; color: #64748b; }
+        .saved-indicator { position: fixed; bottom: 20px; right: 20px; background: #10b981; color: white; padding: 12px 20px; border-radius: 8px; display: none; animation: fadeInOut 2s ease; }
+        @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(20px); } 20% { opacity: 1; transform: translateY(0); } 80% { opacity: 1; } 100% { opacity: 0; } }
+        .scale-recommendation { background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 0.85em; }
+        .scale-recommendation strong { color: #92400e; }
+        @media (max-width: 600px) {
+            .rating-options { flex-wrap: wrap; }
+            .rating-option { min-width: 45%; }
+            .stats { grid-template-columns: 1fr; }
+            .options-list { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Revisión del Cuestionario</h1>
+        <p>Culturas Tutoriales y Mediación Reflexiva</p>
+        <p style="margin-top: 8px; font-size: 0.85em;">Haz clic en cada pregunta y añade tus comentarios</p>
+    </div>
+
+    <div class="container">
+        <div class="info-box">
+            <h2>Instrucciones para coautores</h2>
+            <ul>
+                <li><strong>Opciones de respuesta:</strong> Se muestran debajo de cada pregunta para que veas qué elige el encuestado</li>
+                <li><strong>Relevancia:</strong> ¿Aporta esta pregunta al objetivo de la investigación?</li>
+                <li><strong>Claridad:</strong> ¿Está la pregunta claramente formulada?</li>
+                <li><strong>Comentarios:</strong> Escribe sugerencias, correcciones o ideas</li>
+                <li><strong>Guardado automático:</strong> Tus respuestas se guardan localmente</li>
+            </ul>
+        </div>
+
+        <div style="background: #ecfdf5; border: 1px solid #10b981; border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 0.85em;">
+            <strong style="color: #059669;">✓ Escalas actualizadas:</strong> Todas las escalas están estandarizadas a <strong>1-5</strong> para consistencia estadística.
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number" id="totalQuestions">16</div>
+                <div class="stat-label">Preguntas totales</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="reviewedQuestions">0</div>
+                <div class="stat-label">Revisadas</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="pendingQuestions">16</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+        </div>
+
+        <form id="reviewForm">
+
+            <!-- P0 -->
+            <div class="question-card" data-question="p0">
+                <div class="question-header">
+                    <span class="question-id">P0</span>
+                    <span class="question-text">Centro Asociado UNED en el que tutorizas</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Menú desplegable</span>
+                    <span>Opciones: 62 centros</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta (muestra):</h4>
+                        <div class="options-list">
+                            <span class="option-item">Ávila</span>
+                            <span class="option-item">Alcalá de Henares</span>
+                            <span class="option-item">Alcobendas</span>
+                            <span class="option-item">Alicante</span>
+                            <span class="option-item">Almería</span>
+                            <span class="option-item">... (62 centros totales)</span>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p0_relevancia" value="1" id="p0_r1"><label for="p0_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p0_relevancia" value="2" id="p0_r2"><label for="p0_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p0_relevancia" value="3" id="p0_r3"><label for="p0_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p0_relevancia" value="4" id="p0_r4"><label for="p0_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p0_claridad" value="1" id="p0_c1"><label for="p0_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p0_claridad" value="2" id="p0_c2"><label for="p0_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p0_claridad" value="3" id="p0_c3"><label for="p0_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p0_claridad" value="4" id="p0_c4"><label for="p0_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p0_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P1 -->
+            <div class="question-card" data-question="p1">
+                <div class="question-header">
+                    <span class="question-id">P1</span>
+                    <span class="question-text">Identidad de género</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Menú desplegable</span>
+                    <span>Opciones: 4</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta:</h4>
+                        <div class="options-list">
+                            <span class="option-item">Mujer</span>
+                            <span class="option-item">Hombre</span>
+                            <span class="option-item">No binario</span>
+                            <span class="option-item">Prefiero no decir</span>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p1_relevancia" value="1" id="p1_r1"><label for="p1_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p1_relevancia" value="2" id="p1_r2"><label for="p1_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p1_relevancia" value="3" id="p1_r3"><label for="p1_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p1_relevancia" value="4" id="p1_r4"><label for="p1_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p1_claridad" value="1" id="p1_c1"><label for="p1_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p1_claridad" value="2" id="p1_c2"><label for="p1_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p1_claridad" value="3" id="p1_c3"><label for="p1_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p1_claridad" value="4" id="p1_c4"><label for="p1_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p1_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P2 -->
+            <div class="question-card" data-question="p2">
+                <div class="question-header">
+                    <span class="question-id">P2</span>
+                    <span class="question-text">¿Cuántos años de experiencia tienes como tutor/a de prácticas?</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Menú desplegable</span>
+                    <span>Opciones: 4</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta:</h4>
+                        <div class="options-list">
+                            <span class="option-item">Primer año</span>
+                            <span class="option-item">1-2 años</span>
+                            <span class="option-item">3-5 años</span>
+                            <span class="option-item">Más de 5 años</span>
+                            <span class="option-item">No soy profesor(a) tutor(a) de práctica</span>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p2_relevancia" value="1" id="p2_r1"><label for="p2_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p2_relevancia" value="2" id="p2_r2"><label for="p2_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p2_relevancia" value="3" id="p2_r3"><label for="p2_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p2_relevancia" value="4" id="p2_r4"><label for="p2_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p2_claridad" value="1" id="p2_c1"><label for="p2_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p2_claridad" value="2" id="p2_c2"><label for="p2_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p2_claridad" value="3" id="p2_c3"><label for="p2_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p2_claridad" value="4" id="p2_c4"><label for="p2_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p2_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P3 -->
+            <div class="question-card" data-question="p3">
+                <div class="question-header">
+                    <span class="question-id">P3</span>
+                    <span class="question-text">¿Cuál es tu máximo nivel de estudios?</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Menú desplegable</span>
+                    <span>Opciones: 4</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta:</h4>
+                        <div class="options-list">
+                            <span class="option-item">Grado / Licenciatura</span>
+                            <span class="option-item">Máster</span>
+                            <span class="option-item">Doctorado</span>
+                            <span class="option-item">Otro</span>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p3_relevancia" value="1" id="p3_r1"><label for="p3_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p3_relevancia" value="2" id="p3_r2"><label for="p3_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p3_relevancia" value="3" id="p3_r3"><label for="p3_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p3_relevancia" value="4" id="p3_r4"><label for="p3_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p3_claridad" value="1" id="p3_c1"><label for="p3_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p3_claridad" value="2" id="p3_c2"><label for="p3_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p3_claridad" value="3" id="p3_c3"><label for="p3_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p3_claridad" value="4" id="p3_c4"><label for="p3_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p3_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P4 -->
+            <div class="question-card" data-question="p4">
+                <div class="question-header">
+                    <span class="question-id">P4</span>
+                    <span class="question-text">¿Has recibido formación previa sobre el uso del diario reflexivo?</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Menú desplegable</span>
+                    <span>Opciones: 3</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta:</h4>
+                        <div class="options-list">
+                            <span class="option-item">Sí, formación formal</span>
+                            <span class="option-item">Sí, formación informal</span>
+                            <span class="option-item">No</span>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p4_relevancia" value="1" id="p4_r1"><label for="p4_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p4_relevancia" value="2" id="p4_r2"><label for="p4_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p4_relevancia" value="3" id="p4_r3"><label for="p4_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p4_relevancia" value="4" id="p4_r4"><label for="p4_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p4_claridad" value="1" id="p4_c1"><label for="p4_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p4_claridad" value="2" id="p4_c2"><label for="p4_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p4_claridad" value="3" id="p4_c3"><label for="p4_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p4_claridad" value="4" id="p4_c4"><label for="p4_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p4_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P5 -->
+            <div class="question-card" data-question="p5">
+                <div class="question-header">
+                    <span class="question-id">P5</span>
+                    <span class="question-text">Facultad/Escuela en la que tutorizas</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Menú desplegable</span>
+                    <span>Opciones: 12</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta:</h4>
+                        <div class="options-list">
+                            <span class="option-item">Ciencias Económicas y Empresariales</span>
+                            <span class="option-item">Ciencias Políticas y Sociología</span>
+                            <span class="option-item">Derecho</span>
+                            <span class="option-item">Educación</span>
+                            <span class="option-item">Filosofía</span>
+                            <span class="option-item">Geografía e Historia</span>
+                            <span class="option-item">Informática</span>
+                            <span class="option-item">Letras</span>
+                            <span class="option-item">Medicina</span>
+                            <span class="option-item">Psicología</span>
+                            <span class="option-item">Turismo</span>
+                            <span class="option-item">Otra</span>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p5_relevancia" value="1" id="p5_r1"><label for="p5_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p5_relevancia" value="2" id="p5_r2"><label for="p5_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p5_relevancia" value="3" id="p5_r3"><label for="p5_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p5_relevancia" value="4" id="p5_r4"><label for="p5_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p5_claridad" value="1" id="p5_c1"><label for="p5_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p5_claridad" value="2" id="p5_c2"><label for="p5_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p5_claridad" value="3" id="p5_c3"><label for="p5_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p5_claridad" value="4" id="p5_c4"><label for="p5_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p5_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P6 -->
+            <div class="question-card" data-question="p6" style="border-left-color: #f59e0b;">
+                <div class="question-header" style="background: #fffbeb;">
+                    <span class="question-id" style="background: #f59e0b;">P6</span>
+                    <span class="question-text">Cuando un estudiante tiene dificultades emocionales en las prácticas, ¿con qué frecuencia le ofreces un espacio de escucha sin juzgar?</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Escala 1-5 ✓</span>
+                    <span>⭐ Forma parte de IDX_SOSTEN</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta (Escala 1-5):</h4>
+                        <div class="options-list">
+                            <span class="option-item scale">1 - Nunca</span>
+                            <span class="option-item scale">2 - Raramente</span>
+                            <span class="option-item scale">3 - A veces</span>
+                            <span class="option-item scale">4 - Frecuentemente</span>
+                            <span class="option-item scale">5 - Siempre</span>
+                        </div>
+                        <p style="margin-top: 8px; font-size: 0.8em; color: #059669;">✓ Escala unificada 1-5</p>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p6_relevancia" value="1" id="p6_r1"><label for="p6_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p6_relevancia" value="2" id="p6_r2"><label for="p6_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p6_relevancia" value="3" id="p6_r3"><label for="p6_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p6_relevancia" value="4" id="p6_r4"><label for="p6_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p6_claridad" value="1" id="p6_c1"><label for="p6_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p6_claridad" value="2" id="p6_c2"><label for="p6_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p6_claridad" value="3" id="p6_c3"><label for="p6_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p6_claridad" value="4" id="p6_c4"><label for="p6_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p6_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P7 -->
+            <div class="question-card" data-question="p7" style="border-left-color: #f59e0b;">
+                <div class="question-header" style="background: #fffbeb;">
+                    <span class="question-id" style="background: #f59e0b;">P7</span>
+                    <span class="question-text">Cuando un estudiante solo describe sin profundizar en su diario, ¿con qué frecuencia le haces preguntas abiertas para invitarle a reflexionar?</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Escala 1-5 ✓</span>
+                    <span>⭐ Forma parte de IDX_SOSTEN</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta (Escala 1-5):</h4>
+                        <div class="options-list">
+                            <span class="option-item scale">1 - Nunca</span>
+                            <span class="option-item scale">2 - Raramente</span>
+                            <span class="option-item scale">3 - A veces</span>
+                            <span class="option-item scale">4 - Frecuentemente</span>
+                            <span class="option-item scale">5 - Siempre</span>
+                        </div>
+                        <p style="margin-top: 8px; font-size: 0.8em; color: #059669;">✓ Escala unificada 1-5</p>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p7_relevancia" value="1" id="p7_r1"><label for="p7_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p7_relevancia" value="2" id="p7_r2"><label for="p7_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p7_relevancia" value="3" id="p7_r3"><label for="p7_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p7_relevancia" value="4" id="p7_r4"><label for="p7_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p7_claridad" value="1" id="p7_c1"><label for="p7_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p7_claridad" value="2" id="p7_c2"><label for="p7_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p7_claridad" value="3" id="p7_c3"><label for="p7_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p7_claridad" value="4" id="p7_c4"><label for="p7_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p7_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P8 -->
+            <div class="question-card" data-question="p8" style="border-left-color: #8b5cf6;">
+                <div class="question-header" style="background: #f5f3ff;">
+                    <span class="question-id" style="background: #8b5cf6;">P8</span>
+                    <span class="question-text">¿Con qué frecuencia le pides al estudiante que conecte su experiencia con referentes teóricos?</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Escala 1-5 ✓</span>
+                    <span>⭐ Forma parte de IDX_TECNICO</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta (Escala 1-5):</h4>
+                        <div class="options-list">
+                            <span class="option-item scale">1 - Nunca</span>
+                            <span class="option-item scale">2 - Raramente</span>
+                            <span class="option-item scale">3 - A veces</span>
+                            <span class="option-item scale">4 - Frecuentemente</span>
+                            <span class="option-item scale">5 - Siempre</span>
+                        </div>
+                        <p style="margin-top: 8px; font-size: 0.8em; color: #059669;">✓ Escala unificada 1-5</p>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p8_relevancia" value="1" id="p8_r1"><label for="p8_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p8_relevancia" value="2" id="p8_r2"><label for="p8_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p8_relevancia" value="3" id="p8_r3"><label for="p8_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p8_relevancia" value="4" id="p8_r4"><label for="p8_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p8_claridad" value="1" id="p8_c1"><label for="p8_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p8_claridad" value="2" id="p8_c2"><label for="p8_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p8_claridad" value="3" id="p8_c3"><label for="p8_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p8_claridad" value="4" id="p8_c4"><label for="p8_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p8_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P9 -->
+            <div class="question-card" data-question="p9" style="border-left-color: #8b5cf6;">
+                <div class="question-header" style="background: #f5f3ff;">
+                    <span class="question-id" style="background: #8b5cf6;">P9</span>
+                    <span class="question-text">¿Con qué frecuencia reformulas lo que el estudiante expresa en términos más profesionales o académicos?</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Escala 1-5 ✓</span>
+                    <span>⭐ Forma parte de IDX_TECNICO</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta (Escala 1-5):</h4>
+                        <div class="options-list">
+                            <span class="option-item scale">1 - Nunca</span>
+                            <span class="option-item scale">2 - Raramente</span>
+                            <span class="option-item scale">3 - A veces</span>
+                            <span class="option-item scale">4 - Frecuentemente</span>
+                            <span class="option-item scale">5 - Siempre</span>
+                        </div>
+                        <p style="margin-top: 8px; font-size: 0.8em; color: #059669;">✓ Escala unificada 1-5</p>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p9_relevancia" value="1" id="p9_r1"><label for="p9_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p9_relevancia" value="2" id="p9_r2"><label for="p9_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p9_relevancia" value="3" id="p9_r3"><label for="p9_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p9_relevancia" value="4" id="p9_r4"><label for="p9_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p9_claridad" value="1" id="p9_c1"><label for="p9_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p9_claridad" value="2" id="p9_c2"><label for="p9_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p9_claridad" value="3" id="p9_c3"><label for="p9_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p9_claridad" value="4" id="p9_c4"><label for="p9_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p9_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P10 -->
+            <div class="question-card" data-question="p10" style="border-left-color: #10b981;">
+                <div class="question-header" style="background: #ecfdf5;">
+                    <span class="question-id" style="background: #10b981;">P10</span>
+                    <span class="question-text">¿Con qué afirmación te identificas más en tu rol tutorial?</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Opción múltiple</span>
+                    <span>⭐ Variable de validación</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta:</h4>
+                        <div class="options-list">
+                            <span class="option-item">A) Prefiero que el estudiante se sienta escuchado antes de dar indicaciones técnicas</span>
+                            <span class="option-item">B) Me centro en que el estudiante conecte la práctica con la teoría</span>
+                            <span class="option-item">C) Busco un equilibrio entre acompañamiento emocional y mediación conceptual</span>
+                            <span class="option-item">D) Priorizo la autonomía del estudiante y mi papel es intervenir poco</span>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p10_relevancia" value="1" id="p10_r1"><label for="p10_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p10_relevancia" value="2" id="p10_r2"><label for="p10_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p10_relevancia" value="3" id="p10_r3"><label for="p10_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p10_relevancia" value="4" id="p10_r4"><label for="p10_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p10_claridad" value="1" id="p10_c1"><label for="p10_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p10_claridad" value="2" id="p10_c2"><label for="p10_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p10_claridad" value="3" id="p10_c3"><label for="p10_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p10_claridad" value="4" id="p10_c4"><label for="p10_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p10_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P11 -->
+            <div class="question-card" data-question="p11">
+                <div class="question-header">
+                    <span class="question-id">P11</span>
+                    <span class="question-text">¿Con qué frecuencia utilizas el diario reflexivo como herramienta de acompañamiento?</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Escala 1-5 ✓</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta (Escala 1-5):</h4>
+                        <div class="options-list">
+                            <span class="option-item scale">1 - Nunca</span>
+                            <span class="option-item scale">2 - Raramente</span>
+                            <span class="option-item scale">3 - A veces</span>
+                            <span class="option-item scale">4 - Frecuentemente</span>
+                            <span class="option-item scale">5 - Siempre</span>
+                        </div>
+                        <p style="margin-top: 8px; font-size: 0.8em; color: #059669;">✓ Escala recomendada (1-5)</p>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p11_relevancia" value="1" id="p11_r1"><label for="p11_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p11_relevancia" value="2" id="p11_r2"><label for="p11_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p11_relevancia" value="3" id="p11_r3"><label for="p11_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p11_relevancia" value="4" id="p11_r4"><label for="p11_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p11_claridad" value="1" id="p11_c1"><label for="p11_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p11_claridad" value="2" id="p11_c2"><label for="p11_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p11_claridad" value="3" id="p11_c3"><label for="p11_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p11_claridad" value="4" id="p11_c4"><label for="p11_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p11_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P12 -->
+            <div class="question-card" data-question="p12">
+                <div class="question-header">
+                    <span class="question-id">P12</span>
+                    <span class="question-text">¿Cuál es el mayor desafío que enfrentas al fomentar la reflexión profunda en los estudiantes?</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Texto libre (10-300 caracteres)</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Tipo de respuesta:</h4>
+                        <div class="options-list">
+                            <span class="option-item">Campo de texto libre (mínimo 10, máximo 300 caracteres)</span>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p12_relevancia" value="1" id="p12_r1"><label for="p12_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p12_relevancia" value="2" id="p12_r2"><label for="p12_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p12_relevancia" value="3" id="p12_r3"><label for="p12_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p12_relevancia" value="4" id="p12_r4"><label for="p12_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p12_claridad" value="1" id="p12_c1"><label for="p12_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p12_claridad" value="2" id="p12_c2"><label for="p12_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p12_claridad" value="3" id="p12_c3"><label for="p12_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p12_claridad" value="4" id="p12_c4"><label for="p12_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p12_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P13 -->
+            <div class="question-card" data-question="p13" style="border-left-color: #f59e0b;">
+                <div class="question-header" style="background: #fffbeb;">
+                    <span class="question-id" style="background: #f59e0b;">P13</span>
+                    <span class="question-text">¿Con qué frecuencia adaptas tus estrategias de acompañamiento a las necesidades específicas de cada estudiante?</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Escala 1-5 ✓</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta (Escala 1-5):</h4>
+                        <div class="options-list">
+                            <span class="option-item scale">1 - Nunca</span>
+                            <span class="option-item scale">2 - Raramente</span>
+                            <span class="option-item scale">3 - A veces</span>
+                            <span class="option-item scale">4 - Frecuentemente</span>
+                            <span class="option-item scale">5 - Siempre</span>
+                        </div>
+                        <p style="margin-top: 8px; font-size: 0.8em; color: #059669;">✓ Escala unificada 1-5</p>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p13_relevancia" value="1" id="p13_r1"><label for="p13_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p13_relevancia" value="2" id="p13_r2"><label for="p13_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p13_relevancia" value="3" id="p13_r3"><label for="p13_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p13_relevancia" value="4" id="p13_r4"><label for="p13_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p13_claridad" value="1" id="p13_c1"><label for="p13_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p13_claridad" value="2" id="p13_c2"><label for="p13_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p13_claridad" value="3" id="p13_c3"><label for="p13_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p13_claridad" value="4" id="p13_c4"><label for="p13_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p13_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P14 -->
+            <div class="question-card" data-question="p14">
+                <div class="question-header">
+                    <span class="question-id">P14</span>
+                    <span class="question-text">¿Qué nivel de competencia digital consideras que tienes para el acompañamiento tutorial?</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Menú desplegable</span>
+                    <span>Opciones: 4</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta:</h4>
+                        <div class="options-list">
+                            <span class="option-item">Bajo - Necesito formación</span>
+                            <span class="option-item">Básico - Uso herramientas simples</span>
+                            <span class="option-item">Intermedio - Domino herramientas principales</span>
+                            <span class="option-item">Avanzado - Innovo con tecnología</span>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p14_relevancia" value="1" id="p14_r1"><label for="p14_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p14_relevancia" value="2" id="p14_r2"><label for="p14_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p14_relevancia" value="3" id="p14_r3"><label for="p14_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p14_relevancia" value="4" id="p14_r4"><label for="p14_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p14_claridad" value="1" id="p14_c1"><label for="p14_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p14_claridad" value="2" id="p14_c2"><label for="p14_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p14_claridad" value="3" id="p14_c3"><label for="p14_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p14_claridad" value="4" id="p14_c4"><label for="p14_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p14_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P15 -->
+            <div class="question-card" data-question="p15">
+                <div class="question-header">
+                    <span class="question-id">P15</span>
+                    <span class="question-text">¿Te gustaría participar en una investigación posterior sobre tutoría y escritura reflexiva?</span>
+                </div>
+                <div class="question-meta">
+                    <span>Tipo: Opción múltiple</span>
+                    <span>Opciones: 2</span>
+                </div>
+                <div class="question-body">
+                    <div class="options-preview">
+                        <h4>Opciones de respuesta:</h4>
+                        <div class="options-list">
+                            <span class="option-item">Sí</span>
+                            <span class="option-item">No</span>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es relevante para la investigación?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p15_relevancia" value="1" id="p15_r1"><label for="p15_r1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p15_relevancia" value="2" id="p15_r2"><label for="p15_r2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p15_relevancia" value="3" id="p15_r3"><label for="p15_r3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p15_relevancia" value="4" id="p15_r4"><label for="p15_r4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="rating-group">
+                        <span class="rating-label">¿Es clara la pregunta?</span>
+                        <div class="rating-options">
+                            <div class="rating-option"><input type="radio" name="p15_claridad" value="1" id="p15_c1"><label for="p15_c1">No</label></div>
+                            <div class="rating-option"><input type="radio" name="p15_claridad" value="2" id="p15_c2"><label for="p15_c2">Poco</label></div>
+                            <div class="rating-option"><input type="radio" name="p15_claridad" value="3" id="p15_c3"><label for="p15_c3">Normal</label></div>
+                            <div class="rating-option"><input type="radio" name="p15_claridad" value="4" id="p15_c4"><label for="p15_c4">Muy</label></div>
+                        </div>
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios y sugerencias:</label>
+                        <textarea name="p15_comentario" placeholder="Escribe aquí tus comentarios..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nombre del revisor -->
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-id" style="background: #64748b;">👤</span>
+                    <span class="question-text">Identificación del revisor/a</span>
+                </div>
+                <div class="question-body">
+                    <div class="comment-section">
+                        <label>Nombre o iniciales:</label>
+                        <input type="text" name="revisor_nombre" placeholder="Ej: María García" style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 0.9em;">
+                    </div>
+                    <div class="comment-section">
+                        <label>Comentarios generales sobre el cuestionario:</label>
+                        <textarea name="revisor_comentario_general" placeholder="Observaciones finales, sugerencias globales..." style="min-height: 120px;"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="submit-container">
+                <button type="submit" class="btn-submit">Enviar revisión</button>
+            </div>
+        </form>
+
+        <div class="success-message" id="successMessage">
+            <h2>Revisión enviada correctamente</h2>
+            <p>Gracias por tu contribución. Tus comentarios serán revisados.</p>
+            <p style="margin-top: 16px; font-size: 0.9em; color: #64748b;">Las respuestas también se han guardado localmente en tu navegador.</p>
+        </div>
+    </div>
+
+    <div class="saved-indicator" id="savedIndicator">Guardado ✓</div>
+
+    <script>
+        // Cargar datos guardados
+        let savedData = JSON.parse(localStorage.getItem('questionnaire_review') || '{}');
+        
+        // Restaurar datos al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            Object.keys(savedData).forEach(key => {
+                const element = document.querySelector(`[name="${key}"]`);
+                if (element) {
+                    if (element.type === 'radio') {
+                        const radio = document.querySelector(`[name="${key}"][value="${savedData[key]}"]`);
+                        if (radio) radio.checked = true;
+                    } else {
+                        element.value = savedData[key];
+                    }
+                }
+            });
+            updateStats();
+        });
+
+        // Guardado automático
+        document.querySelectorAll('input, textarea').forEach(el => {
+            el.addEventListener('change', function() {
+                savedData[this.name] = this.type === 'radio' ? this.value : this.value;
+                localStorage.setItem('questionnaire_review', JSON.stringify(savedData));
+                showSavedIndicator();
+                updateStats();
+            });
+            el.addEventListener('input', function() {
+                savedData[this.name] = this.value;
+                localStorage.setItem('questionnaire_review', JSON.stringify(savedData));
+            });
+        });
+
+        function showSavedIndicator() {
+            const indicator = document.getElementById('savedIndicator');
+            indicator.style.display = 'block';
+            setTimeout(() => { indicator.style.display = 'none'; }, 2000);
+        }
+
+        function updateStats() {
+            const questions = ['p0','p1','p2','p3','p4','p5','p6','p7','p8','p9','p10','p11','p12','p13','p14','p15'];
+            let reviewed = 0;
+            questions.forEach(q => {
+                if (savedData[`${q}_relevancia`] || savedData[`${q}_claridad`]) {
+                    reviewed++;
+                }
+            });
+            document.getElementById('reviewedQuestions').textContent = reviewed;
+            document.getElementById('pendingQuestions').textContent = 16 - reviewed;
+        }
+
+        // Enviar formulario
+        document.getElementById('reviewForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Preparar datos para email
+            const questions = ['p0','p1','p2','p3','p4','p5','p6','p7','p8','p9','p10','p11','p12','p13','p14','p15'];
+            let emailBody = 'REVISIÓN DEL CUESTIONARIO - CULTURAS TUTORIALES\n';
+            emailBody += '================================================\n\n';
+            emailBody += `Revisor/a: ${savedData.revisor_nombre || 'No especificado'}\n`;
+            emailBody += `Fecha: ${new Date().toLocaleString('es-ES')}\n\n`;
+            emailBody += 'RESUMEN DE VALORACIONES\n';
+            emailBody += '------------------------\n';
+            
+            questions.forEach(q => {
+                const relevancia = savedData[`${q}_relevancia`] || '-';
+                const claridad = savedData[`${q}_claridad`] || '-';
+                const comentario = savedData[`${q}_comentario`] || '';
+                emailBody += `\n${q.toUpperCase()}: Relevancia=${relevancia}, Claridad=${claridad}\n`;
+                if (comentario) emailBody += `  Comentario: ${comentario}\n`;
+            });
+            
+            emailBody += '\n\nCOMENTARIOS GENERALES\n';
+            emailBody += '--------------------\n';
+            emailBody += savedData.revisor_comentario_general || 'Sin comentarios generales';
+            
+            // Enviar con FormSubmit.co
+            fetch('https://formsubmit.co/ajax/evacatano@sevilla.uned.es', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    _subject: `Revisión Cuestionario - ${savedData.revisor_nombre || 'Anónimo'}`,
+                    _template: 'table',
+                    _captcha: 'false',
+                    _autoresponse: 'Gracias por tu revisión del cuestionario. Ha sido registrada correctamente.',
+                    'Revisor': savedData.revisor_nombre || 'No especificado',
+                    'Email': savedData.revisor_email || 'No proporcionado',
+                    'Institución': savedData.revisor_institucion || 'No especificada',
+                    'Resumen Valoraciones': emailBody
+                })
+            }).then(function(response) {
+                console.log('Email enviado:', response);
+                document.getElementById('reviewForm').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }).catch(function(error) {
+                console.error('Error al enviar:', error);
+                alert('Error al enviar. Por favor, intenta de nuevo o contacta por email.');
+            });
+        });
+    </script>
+</body>
+</html>
