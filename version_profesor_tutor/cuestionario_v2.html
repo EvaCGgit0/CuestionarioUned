@@ -3,64 +3,411 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Culturas Tutoriales y Mediación Reflexiva - v2.0</title>
+    <title>Culturas Tutoriales y Mediación Reflexiva - UNED</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; }
-        .container { max-width: 700px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #1a73e8, #0d47a1); color: white; padding: 30px; border-radius: 12px 12px 0 0; text-align: center; }
-        .header h1 { font-size: 1.8em; margin-bottom: 10px; }
-        .header p { opacity: 0.9; font-size: 0.95em; }
-        .form-container { background: white; padding: 30px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        .section { margin-bottom: 30px; border-bottom: 2px solid #e0e0e0; padding-bottom: 20px; }
-        .section:last-child { border-bottom: none; }
-        .section-title { background: #e3f2fd; color: #1565c0; padding: 10px 15px; border-radius: 6px; font-weight: 600; margin-bottom: 20px; font-size: 1.1em; }
-        .question { margin-bottom: 25px; }
-        .question label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; }
-        .question .required { color: #d32f2f; }
-        select, textarea { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1em; transition: border-color 0.3s; }
-        select:focus, textarea:focus { outline: none; border-color: #1a73e8; }
-        textarea { min-height: 100px; resize: vertical; }
-        .scale-container { display: flex; flex-direction: column; gap: 10px; }
-        .scale-labels { display: flex; justify-content: space-between; color: #666; font-size: 0.9em; }
-        .scale-options { display: flex; justify-content: space-between; gap: 10px; }
-        .scale-option { flex: 1; text-align: center; }
-        .scale-option input { display: none; }
-        .scale-option label { display: block; padding: 12px 8px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.3s; font-weight: normal; }
-        .scale-option input:checked + label { background: #1a73e8; color: white; border-color: #1a73e8; }
-        .scale-option label:hover { background: #f5f5f5; }
-        .radio-group { display: flex; flex-direction: column; gap: 10px; }
-        .radio-option { display: flex; align-items: center; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
-        .radio-option:hover { background: #f5f5f5; }
-        .radio-option input { margin-right: 12px; width: 18px; height: 18px; }
-        .radio-option.selected { background: #e3f2fd; border-color: #1a73e8; }
-        .metaphor-group { display: flex; flex-direction: column; gap: 12px; }
-        .metaphor-option { display: flex; align-items: center; padding: 15px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
-        .metaphor-option:hover { background: #f5f5f5; }
-        .metaphor-option input { margin-right: 12px; width: 18px; height: 18px; }
-        .metaphor-option .emoji { font-size: 1.5em; margin-right: 10px; }
-        .metaphor-option.selected { background: #e3f2fd; border-color: #1a73e8; }
-        .color-scale { display: flex; flex-direction: column; gap: 12px; }
-        .color-option { display: flex; align-items: center; padding: 15px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
-        .color-option:hover { background: #f5f5f5; }
-        .color-option input { margin-right: 12px; width: 18px; height: 18px; }
-        .color-option .color-dot { width: 24px; height: 24px; border-radius: 50%; margin-right: 10px; display: inline-block; }
-        .color-option.selected { background: #e3f2fd; border-color: #1a73e8; }
-        .btn-container { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
-        .btn { padding: 14px 40px; border: none; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; transition: all 0.3s; }
-        .btn-primary { background: #1a73e8; color: white; }
-        .btn-primary:hover { background: #1557b0; }
-        .btn-secondary { background: #f5f5f5; color: #666; }
-        .btn-secondary:hover { background: #e0e0e0; }
-        .success-message { display: none; background: #e8f5e9; color: #2e7d32; padding: 30px; border-radius: 12px; text-align: center; }
-        .success-message h2 { margin-bottom: 15px; }
-        .error { border-color: #d32f2f !important; }
-        .error-msg { color: #d32f2f; font-size: 0.85em; margin-top: 5px; display: none; }
+        
+        body { 
+            font-family: 'Arial', 'Titillium Web', sans-serif; 
+            background: #f8f9fa; 
+            color: #333; 
+            line-height: 1.6; 
+        }
+        
+        .container { 
+            max-width: 750px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        
+        /* HEADER UNED */
+        .header { 
+            background: linear-gradient(135deg, #74A44E 0%, #5A8A3A 100%); 
+            color: white; 
+            padding: 40px 30px; 
+            border-radius: 8px 8px 0 0; 
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #fff;
+        }
+        
+        .header h1 { 
+            font-family: 'Titillium Web', sans-serif;
+            font-size: 1.8em; 
+            font-weight: 700;
+            margin-bottom: 10px; 
+            letter-spacing: 0.5px;
+        }
+        
+        .header p { 
+            opacity: 0.95; 
+            font-size: 0.95em;
+            font-weight: 300;
+        }
+        
+        .header .institutional {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+            font-size: 0.85em;
+            font-weight: 400;
+        }
+        
+        /* FORMULARIO */
+        .form-container { 
+            background: white; 
+            padding: 35px; 
+            border-radius: 0 0 8px 8px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+        }
+        
+        .section { 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid #e8e8e8; 
+            padding-bottom: 25px; 
+        }
+        
+        .section:last-child { 
+            border-bottom: none; 
+        }
+        
+        .section-title { 
+            background: #74A44E; 
+            color: white; 
+            padding: 12px 18px; 
+            border-radius: 6px; 
+            font-family: 'Titillium Web', sans-serif;
+            font-weight: 600; 
+            margin-bottom: 22px; 
+            font-size: 1.05em;
+            letter-spacing: 0.3px;
+        }
+        
+        .question { 
+            margin-bottom: 28px; 
+        }
+        
+        .question label { 
+            display: block; 
+            font-weight: 600; 
+            margin-bottom: 10px; 
+            color: #444;
+            font-size: 0.98em;
+        }
+        
+        .question .required { 
+            color: #c0392b; 
+        }
+        
+        select, textarea { 
+            width: 100%; 
+            padding: 14px 16px; 
+            border: 2px solid #ddd; 
+            border-radius: 6px; 
+            font-size: 1em; 
+            font-family: 'Arial', sans-serif;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: #fafafa;
+        }
+        
+        select:focus, textarea:focus { 
+            outline: none; 
+            border-color: #74A44E; 
+            box-shadow: 0 0 0 3px rgba(116, 164, 78, 0.15);
+            background: #fff;
+        }
+        
+        textarea { 
+            min-height: 100px; 
+            resize: vertical; 
+        }
+        
+        /* ESCALA NUMÉRICA */
+        .scale-container { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+        }
+        
+        .scale-labels { 
+            display: flex; 
+            justify-content: space-between; 
+            color: #666; 
+            font-size: 0.88em;
+            font-weight: 400;
+        }
+        
+        .scale-options { 
+            display: flex; 
+            justify-content: space-between; 
+            gap: 8px; 
+        }
+        
+        .scale-option { 
+            flex: 1; 
+            text-align: center; 
+        }
+        
+        .scale-option input { 
+            display: none; 
+        }
+        
+        .scale-option label { 
+            display: block; 
+            padding: 14px 8px; 
+            border: 2px solid #ddd; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            font-weight: 600;
+            font-size: 1em;
+            background: #fafafa;
+        }
+        
+        .scale-option input:checked + label { 
+            background: #74A44E; 
+            color: white; 
+            border-color: #74A44E;
+            box-shadow: 0 2px 8px rgba(116, 164, 78, 0.3);
+        }
+        
+        .scale-option label:hover { 
+            background: #f0f7eb;
+            border-color: #74A44E;
+        }
+        
+        /* OPCIONES DE RADIO */
+        .radio-group { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+        }
+        
+        .radio-option { 
+            display: flex; 
+            align-items: center; 
+            padding: 14px 16px; 
+            border: 2px solid #ddd; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+        
+        .radio-option:hover { 
+            background: #f0f7eb;
+            border-color: #74A44E;
+        }
+        
+        .radio-option input { 
+            margin-right: 14px; 
+            width: 18px; 
+            height: 18px;
+            accent-color: #74A44E;
+        }
+        
+        .radio-option.selected { 
+            background: #f0f7eb; 
+            border-color: #74A44E;
+        }
+        
+        /* METÁFORAS VISUALES */
+        .metaphor-group { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+        }
+        
+        .metaphor-option { 
+            display: flex; 
+            align-items: center; 
+            padding: 16px; 
+            border: 2px solid #ddd; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+        
+        .metaphor-option:hover { 
+            background: #f0f7eb;
+            border-color: #74A44E;
+        }
+        
+        .metaphor-option input { 
+            margin-right: 14px; 
+            width: 18px; 
+            height: 18px;
+            accent-color: #74A44E;
+        }
+        
+        .metaphor-option .emoji { 
+            font-size: 1.6em; 
+            margin-right: 14px; 
+        }
+        
+        .metaphor-option.selected { 
+            background: #f0f7eb; 
+            border-color: #74A44E;
+        }
+        
+        /* ESCALA DE COLORES */
+        .color-scale { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+        }
+        
+        .color-option { 
+            display: flex; 
+            align-items: center; 
+            padding: 16px; 
+            border: 2px solid #ddd; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+        
+        .color-option:hover { 
+            background: #f5f5f5;
+            border-color: #74A44E;
+        }
+        
+        .color-option input { 
+            margin-right: 14px; 
+            width: 18px; 
+            height: 18px;
+            accent-color: #74A44E;
+        }
+        
+        .color-option .color-dot { 
+            width: 28px; 
+            height: 28px; 
+            border-radius: 50%; 
+            margin-right: 14px; 
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        
+        .color-option.selected { 
+            background: #f5f5f5; 
+            border-color: #74A44E;
+        }
+        
+        /* BOTONES */
+        .btn-container { 
+            display: flex; 
+            gap: 15px; 
+            justify-content: center; 
+            margin-top: 35px; 
+            padding-top: 25px;
+            border-top: 2px solid #e8e8e8;
+        }
+        
+        .btn { 
+            padding: 14px 45px; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 1em; 
+            font-family: 'Titillium Web', sans-serif;
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+        
+        .btn-primary { 
+            background: #74A44E; 
+            color: white;
+            box-shadow: 0 2px 8px rgba(116, 164, 78, 0.3);
+        }
+        
+        .btn-primary:hover { 
+            background: #5A8A3A;
+            box-shadow: 0 4px 12px rgba(116, 164, 78, 0.4);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary { 
+            background: #f5f5f5; 
+            color: #666;
+            border: 2px solid #ddd;
+        }
+        
+        .btn-secondary:hover { 
+            background: #e8e8e8;
+            border-color: #ccc;
+        }
+        
+        /* MENSAJE DE ÉXITO */
+        .success-message { 
+            display: none; 
+            background: #f0f7eb; 
+            color: #2d5a1e; 
+            padding: 40px; 
+            border-radius: 8px; 
+            text-align: center;
+            border: 2px solid #74A44E;
+        }
+        
+        .success-message h2 { 
+            margin-bottom: 15px;
+            font-family: 'Titillium Web', sans-serif;
+            color: #5A8A3A;
+        }
+        
+        /* ERRORES */
+        .error { 
+            border-color: #c0392b !important; 
+        }
+        
+        .error-msg { 
+            color: #c0392b; 
+            font-size: 0.85em; 
+            margin-top: 8px; 
+            display: none;
+            font-weight: 500;
+        }
+        
+        /* RESPONSIVE */
         @media (max-width: 600px) {
             .container { padding: 10px; }
             .form-container { padding: 20px; }
             .scale-options { flex-wrap: wrap; }
             .scale-option { min-width: 45%; }
+            .header h1 { font-size: 1.4em; }
+        }
+        
+        /* PIE DE PÁGINA */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.85em;
+            border-top: 2px solid #e8e8e8;
+            margin-top: 20px;
+        }
+        
+        .footer a {
+            color: #74A44E;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -70,12 +417,16 @@
             <h1>Culturas Tutoriales y Mediación Reflexiva</h1>
             <p>Cuestionario sobre estilos de acompañamiento y estrategias de mediación en prácticas digitales a distancia.</p>
             <p>Tiempo estimado: 5-7 minutos | Confidencialidad: Anónimo</p>
+            <div class="institutional">
+                <strong>Universidad Nacional de Educación a Distancia (UNED)</strong><br>
+                Investigación sobre prácticum digital en educación superior
+            </div>
         </div>
 
         <div class="form-container">
             <form id="questionnaire">
 
-                <!-- SECCIÓN 1: Perfil del/a Tutor/a (SIN CAMBIOS) -->
+                <!-- SECCIÓN 1: Perfil del/a Tutor/a -->
                 <div class="section">
                     <div class="section-title">1. Perfil del/a Tutor/a</div>
 
@@ -218,7 +569,7 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN 2: CÓMO ACOMPAÑAS (CON METÁFORAS VISUALES) -->
+                <!-- SECCIÓN 2: CÓMO ACOMPAÑAS -->
                 <div class="section">
                     <div class="section-title">2. Cómo acompañas</div>
 
@@ -256,7 +607,7 @@
                     </div>
 
                     <div class="question">
-                        <label>P7. Cuando un estudiante solo describe sin profundizar en su diario, ¿con qué frecuencia le haces preguntas abiertas para invitarle a reflexionar? <span class="required">*</span></label>
+                        <label>P7. Cuando un estudiante solo describe sin profundizar sobre su experiencia de prácticas, ¿con qué frecuencia le haces preguntas abiertas para invitarle a reflexionar? <span class="required">*</span></label>
                         <div class="scale-container">
                             <div class="scale-options">
                                 <div class="scale-option">
@@ -382,7 +733,7 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN 3: HERRAMIENTAS Y COMPETENCIAS (CON CAMBIOS ESPECÍFICOS) -->
+                <!-- SECCIÓN 3: HERRAMIENTAS Y COMPETENCIAS -->
                 <div class="section">
                     <div class="section-title">3. Herramientas y competencias</div>
 
@@ -481,17 +832,17 @@
                             <div class="color-option">
                                 <input type="radio" name="p14" value="Básica" id="p14_1">
                                 <span class="color-dot" style="background-color: #ff9800;"></span>
-                                <label for="p14_1">🟠 Básica - Uso herramientas simples</label>
+                                <label for="p14_1">Básica - Uso herramientas simples</label>
                             </div>
                             <div class="color-option">
                                 <input type="radio" name="p14" value="Intermedia" id="p14_2">
                                 <span class="color-dot" style="background-color: #ffc107;"></span>
-                                <label for="p14_2">🟡 Intermedia - Domino herramientas principales</label>
+                                <label for="p14_2">Intermedia - Domino herramientas principales</label>
                             </div>
                             <div class="color-option">
                                 <input type="radio" name="p14" value="Avanzada" id="p14_3">
-                                <span class="color-dot" style="background-color: #4caf50;"></span>
-                                <label for="p14_3">🟢 Avanzada - Innovo con tecnología</label>
+                                <span class="color-dot" style="background-color: #74A44E;"></span>
+                                <label for="p14_3">Avanzada - Innovo con tecnología</label>
                             </div>
                         </div>
                         <div class="error-msg">Por favor, selecciona una opción</div>
@@ -536,6 +887,12 @@
                 <p>Si deseas participar en fases futuras de la investigación (entrevista o grupo focal), puedes contactar a: <strong>evacatano@sevilla.uned.es</strong></p>
                 <p>Los datos serán tratados con confidencialidad y utilizados exclusivamente con fines académicos.</p>
             </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Universidad Nacional de Educación a Distancia (UNED)</strong></p>
+            <p>Investigación sobre prácticum digital en educación superior</p>
+            <p>Contacto: <a href="mailto:evacatano@sevilla.uned.es">evacatano@sevilla.uned.es</a></p>
         </div>
     </div>
 
