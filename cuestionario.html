@@ -66,10 +66,21 @@
         }
         
         /* INDICADOR DE PROGRESO */
+        .progress-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: white;
+            padding: 15px 0;
+            margin: 0 -35px 25px -35px;
+            padding-left: 35px;
+            padding-right: 35px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+        
         .progress-container {
             background: #f0f0f0;
             border-radius: 20px;
-            margin-bottom: 25px;
             overflow: hidden;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
@@ -458,10 +469,12 @@
         </div>
 
         <div class="form-container">
-            <div class="progress-info">Pregunta <span id="currentQuestion">1</span> de <span id="totalQuestions">18</span></div>
-            <div class="progress-container">
-                <div class="progress-bar" id="progressBar" style="width: 5.6%;">
-                    <span class="progress-text">6%</span>
+            <div class="progress-wrapper">
+                <div class="progress-info">Pregunta <span id="currentQuestion">1</span> de <span id="totalQuestions">18</span></div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar" style="width: 5.6%;">
+                        <span class="progress-text">6%</span>
+                    </div>
                 </div>
             </div>
             <form id="questionnaire">
@@ -1115,8 +1128,7 @@
 
                 // Mostrar mensaje de éxito
                 document.getElementById('questionnaire').style.display = 'none';
-                document.querySelector('.progress-container').style.display = 'none';
-                document.querySelector('.progress-info').style.display = 'none';
+                document.querySelector('.progress-wrapper').style.display = 'none';
                 document.getElementById('successMessage').style.display = 'block';
             }
         });
