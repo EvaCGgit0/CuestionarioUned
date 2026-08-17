@@ -470,7 +470,7 @@
 
         <div class="form-container">
             <div class="progress-wrapper">
-                <div class="progress-info">Pregunta <span id="currentQuestion">1</span> de <span id="totalQuestions">18</span></div>
+                <div class="progress-info">Pregunta <span id="currentQuestion">1</span> de <span id="totalQuestions">19</span></div>
                 <div class="progress-container">
                     <div class="progress-bar" id="progressBar" style="width: 5.6%;">
                         <span class="progress-text">6%</span>
@@ -1020,7 +1020,7 @@
         let responses = JSON.parse(localStorage.getItem('questionnaire_responses') || '[]');
 
         // Total de preguntas obligatorias (excluye textarea p15 que se valida por separado)
-        const totalQuestions = 18;
+        const totalQuestions = 19;
         let answeredQuestions = new Set();
 
         // Actualizar indicador de progreso
