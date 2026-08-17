@@ -563,12 +563,12 @@
 
                 <!-- CÓDIGO ÚNICO -->
                 <div class="section" style="background: #f0f7eb; border-radius: 8px; padding: 20px; border-bottom: none;">
-                    <div class="section-title" style="background: #5A8A3A;">Código de acceso</div>
+                    <div class="section-title" style="background: #5A8A3A;">Identificación</div>
                     <div class="question">
-                        <label>Introduce el código único que has recibido para acceder al cuestionario <span class="required">*</span></label>
-                        <input type="text" name="access_code" id="accessCode" placeholder="Ejemplo: TUTOR-2026-XXXX" required 
-                               style="width: 100%; padding: 14px 16px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em; font-family: 'Arial', sans-serif; text-transform: uppercase;">
-                        <div class="error-msg" id="codeError">Código no válido o ya utilizado</div>
+                        <label>Introduce tu email institucional UNED <span class="required">*</span></label>
+                        <input type="email" name="email_institucional" id="emailInstitucional" placeholder="Ejemplo: nombre.apellido@uned.es" required 
+                               style="width: 100%; padding: 14px 16px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em; font-family: 'Arial', sans-serif;">
+                        <div class="error-msg" id="emailError">Email no válido o ya utilizado</div>
                     </div>
                 </div>
 
@@ -1124,8 +1124,8 @@
                         <span id="totalResponses">0</span>
                     </div>
                     <div class="stat-item">
-                        <span>Códigos utilizados:</span>
-                        <span id="usedCodesCount">0</span>
+                        <span>Emails registrados:</span>
+                        <span id="usedEmailsCount">0</span>
                     </div>
                     <div class="stat-item">
                         <span>Última respuesta:</span>
@@ -1145,12 +1145,15 @@
     </div>
 
     <script>
-        // Almacenar respuestas y códigos usados
+        // Almacenar respuestas y emails usados
         let responses = JSON.parse(localStorage.getItem('questionnaire_responses') || '[]');
-        let usedCodes = JSON.parse(localStorage.getItem('used_access_codes') || '[]');
+        let usedEmails = JSON.parse(localStorage.getItem('used_emails') || '[]');
         
-        // Clave secreta para acceder al CSV (cambiar por una más segura)
+        // Clave secreta para acceder al CSV
         const RESEARCHER_KEY = 'EVACATANO2026';
+        
+        // Dominios de email válidos para UNED
+        const VALID_DOMAINS = ['uned.es', 'fundacioncentra.es', 'edu.uned.es', 'alumnos.uned.es'];
 
         // Total de preguntas obligatorias
         const totalQuestions = 20;
@@ -1168,18 +1171,16 @@
             currentQuestionEl.textContent = answeredQuestions.size + 1;
         }
 
-        // Registrar respuestas para progreso (excluye access_code)
+        // Registrar respuestas para progreso (excluye email)
         document.querySelectorAll('select[name]').forEach(select => {
-            if (select.name !== 'access_code') {
-                select.addEventListener('change', function() {
-                    if (this.value) {
-                        answeredQuestions.add(this.name);
-                    } else {
-                        answeredQuestions.delete(this.name);
-                    }
-                    updateProgress();
-                });
-            }
+            select.addEventListener('change', function() {
+                if (this.value) {
+                    answeredQuestions.add(this.name);
+                } else {
+                    answeredQuestions.delete(this.name);
+                }
+                updateProgress();
+            });
         });
 
         document.querySelectorAll('input[type="radio"]').forEach(radio => {
@@ -1198,16 +1199,27 @@
             updateProgress();
         });
 
-        // Validar código de acceso
-        function validateAccessCode(code) {
-            // Formato: TUTOR-2026-XXXX (letras y números)
-            const codeRegex = /^TUTOR-2026-[A-Z0-9]{4}$/;
-            if (!codeRegex.test(code)) {
-                return { valid: false, message: 'Formato de código inválido. Debe ser: TUTOR-2026-XXXX' };
+        // Validar email institucional
+        function validateEmail(email) {
+            // Formato básico de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return { valid: false, message: 'Formato de email inválido' };
             }
-            if (usedCodes.includes(code)) {
-                return { valid: false, message: 'Este código ya ha sido utilizado. Solo se permite una respuesta por código.' };
+            
+            // Verificar dominio
+            const domain = email.split('@')[1].toLowerCase();
+            const isValidDomain = VALID_DOMAINS.some(d => domain.endsWith(d));
+            if (!isValidDomain) {
+                return { valid: false, message: 'El email debe ser un dominio UNED válido (@uned.es, @fundacioncentra.es, etc.)' };
             }
+            
+            // Verificar si ya fue utilizado
+            const normalizedEmail = email.toLowerCase();
+            if (usedEmails.includes(normalizedEmail)) {
+                return { valid: false, message: 'Este email ya ha sido utilizado. Solo se permite una respuesta por persona.' };
+            }
+            
             return { valid: true };
         }
 
@@ -1215,21 +1227,21 @@
         document.getElementById('questionnaire').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Validar código de acceso primero
-            const accessCodeInput = document.getElementById('accessCode');
-            const codeError = document.getElementById('codeError');
-            const codeValue = accessCodeInput.value.trim().toUpperCase();
-            accessCodeInput.value = codeValue; // Convertir a mayúsculas
+            // Validar email institucional primero
+            const emailInput = document.getElementById('emailInstitucional');
+            const emailError = document.getElementById('emailError');
+            const emailValue = emailInput.value.trim().toLowerCase();
+            emailInput.value = emailValue;
             
-            const codeValidation = validateAccessCode(codeValue);
-            if (!codeValidation.valid) {
-                codeError.textContent = codeValidation.message;
-                codeError.style.display = 'block';
-                accessCodeInput.classList.add('error');
+            const emailValidation = validateEmail(emailValue);
+            if (!emailValidation.valid) {
+                emailError.textContent = emailValidation.message;
+                emailError.style.display = 'block';
+                emailInput.classList.add('error');
                 return;
             } else {
-                codeError.style.display = 'none';
-                accessCodeInput.classList.remove('error');
+                emailError.style.display = 'none';
+                emailInput.classList.remove('error');
             }
 
             // Validar campos obligatorios
@@ -1262,15 +1274,15 @@
             }
 
             if (isValid) {
-                // Guardar código como usado
-                usedCodes.push(codeValue);
-                localStorage.setItem('used_access_codes', JSON.stringify(usedCodes));
+                // Guardar email como usado
+                usedEmails.push(emailValue);
+                localStorage.setItem('used_emails', JSON.stringify(usedEmails));
 
                 // Recopilar respuestas
                 const timestamp = new Date().toISOString();
                 const answer = {
                     timestamp: timestamp,
-                    access_code: codeValue,
+                    email: emailValue,
                     p0: document.querySelector('select[name="p0"]').value,
                     p1: document.querySelector('select[name="p1"]').value,
                     p2: document.querySelector('select[name="p2"]').value,
@@ -1310,14 +1322,14 @@
                 return;
             }
 
-            const headers = ['Timestamp', 'Codigo_acceso', 'Centro_Asociado', 'Identidad_genero', 'Experiencia', 'Nivel_estudios', 'Formacion_previa', 'Facultad', 'Espacio_escucha', 'Preguntas_reflexion', 'Validacion_emociones', 'Conexion_teoria', 'Reformulacion_profesional', 'Identificacion_factores', 'Estilo_tutorial', 'Frecuencia_diario', 'Escenario_reflexion', 'Adaptacion_estrategias', 'Competencia_digital', 'Necesidades_mejora', 'Interes_investigacion'];
+            const headers = ['Timestamp', 'Email', 'Centro_Asociado', 'Identidad_genero', 'Experiencia', 'Nivel_estudios', 'Formacion_previa', 'Facultad', 'Espacio_escucha', 'Preguntas_reflexion', 'Validacion_emociones', 'Conexion_teoria', 'Reformulacion_profesional', 'Identificacion_factores', 'Estilo_tutorial', 'Frecuencia_diario', 'Escenario_reflexion', 'Adaptacion_estrategias', 'Competencia_digital', 'Necesidades_mejora', 'Interes_investigacion'];
 
             let csv = headers.join(',') + '\n';
 
             responses.forEach(r => {
                 const row = [
                     r.timestamp,
-                    `"${r.access_code}"`,
+                    `"${r.email}"`,
                     `"${r.p0}"`,
                     `"${r.p1}"`,
                     `"${r.p2}"`,
@@ -1371,7 +1383,7 @@
                 
                 // Actualizar estadísticas
                 document.getElementById('totalResponses').textContent = responses.length;
-                document.getElementById('usedCodesCount').textContent = usedCodes.length;
+                document.getElementById('usedEmailsCount').textContent = usedEmails.length;
                 if (responses.length > 0) {
                     const lastDate = new Date(responses[responses.length - 1].timestamp);
                     document.getElementById('lastResponse').textContent = lastDate.toLocaleString('es-ES');
