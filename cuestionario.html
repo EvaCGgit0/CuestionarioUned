@@ -427,6 +427,88 @@
             font-weight: 500;
         }
         
+        /* PANEL DE INVESTIGADORA */
+        .researcher-panel {
+            display: none;
+            background: #1a1a2e;
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .researcher-panel h3 {
+            color: #74A44E;
+            margin-bottom: 20px;
+            font-family: 'Titillium Web', sans-serif;
+        }
+        
+        .researcher-panel input[type="password"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #444;
+            border-radius: 6px;
+            font-size: 1em;
+            background: #2d2d44;
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .researcher-panel input[type="password"]:focus {
+            border-color: #74A44E;
+            outline: none;
+        }
+        
+        .researcher-panel .login-error {
+            color: #ff6b6b;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .researcher-panel .stats {
+            background: #2d2d44;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        
+        .researcher-panel .stats h4 {
+            color: #74A44E;
+            margin-bottom: 15px;
+        }
+        
+        .researcher-panel .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #444;
+        }
+        
+        .researcher-panel .btn-download {
+            background: #74A44E;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .researcher-panel .btn-download:hover {
+            background: #5A8A3A;
+        }
+        
+        .researcher-panel .hint {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 15px;
+            font-style: italic;
+        }
+        
         /* RESPONSIVE */
         @media (max-width: 600px) {
             .container { padding: 10px; }
@@ -470,7 +552,7 @@
 
         <div class="form-container">
             <div class="progress-wrapper">
-                <div class="progress-info">Pregunta <span id="currentQuestion">1</span> de <span id="totalQuestions">19</span></div>
+                <div class="progress-info">Pregunta <span id="currentQuestion">1</span> de <span id="totalQuestions">20</span></div>
                 <div class="progress-container">
                     <div class="progress-bar" id="progressBar" style="width: 5.6%;">
                         <span class="progress-text">6%</span>
@@ -478,6 +560,17 @@
                 </div>
             </div>
             <form id="questionnaire">
+
+                <!-- CÓDIGO ÚNICO -->
+                <div class="section" style="background: #f0f7eb; border-radius: 8px; padding: 20px; border-bottom: none;">
+                    <div class="section-title" style="background: #5A8A3A;">Código de acceso</div>
+                    <div class="question">
+                        <label>Introduce el código único que has recibido para acceder al cuestionario <span class="required">*</span></label>
+                        <input type="text" name="access_code" id="accessCode" placeholder="Ejemplo: TUTOR-2026-XXXX" required 
+                               style="width: 100%; padding: 14px 16px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em; font-family: 'Arial', sans-serif; text-transform: uppercase;">
+                        <div class="error-msg" id="codeError">Código no válido o ya utilizado</div>
+                    </div>
+                </div>
 
                 <!-- SECCIÓN 1: Perfil del/a Tutor/a -->
                 <div class="section">
@@ -994,8 +1087,12 @@
                     </div>
                 </div>
 
-                <div class="btn-container">
+                <div class="btn-container" style="display: none;">
                     <button type="button" class="btn btn-secondary" onclick="exportCSV()">Descargar CSV</button>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+                
+                <div class="btn-container">
                     <button type="submit" class="btn btn-primary">Enviar</button>
                 </div>
             </form>
@@ -1008,6 +1105,38 @@
             </div>
         </div>
 
+        <!-- PANEL DE INVESTIGADORA (Ctrl+Shift+C para mostrar) -->
+        <div class="researcher-panel" id="researcherPanel">
+            <h3>Panel de Investigadora</h3>
+            <p>Introduce la contraseña para acceder a los datos:</p>
+            
+            <div id="researcherLogin">
+                <input type="password" id="researcherPassword" placeholder="Contraseña">
+                <div class="login-error" id="loginError"></div>
+                <button type="button" class="btn-download" onclick="researcherLogin()">Acceder</button>
+            </div>
+            
+            <div id="researcherData" style="display: none;">
+                <div class="stats">
+                    <h4>Estadísticas de respuestas</h4>
+                    <div class="stat-item">
+                        <span>Total de respuestas:</span>
+                        <span id="totalResponses">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Códigos utilizados:</span>
+                        <span id="usedCodesCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Última respuesta:</span>
+                        <span id="lastResponse">-</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-download" onclick="exportCSV()">Descargar CSV</button>
+                <p class="hint">Atajos de teclado: Ctrl+Shift+C para mostrar/ocultar este panel</p>
+            </div>
+        </div>
+
         <div class="footer">
             <p><strong>Universidad Nacional de Educación a Distancia (UNED)</strong></p>
             <p>Investigación sobre prácticum digital en educación superior</p>
@@ -1016,11 +1145,15 @@
     </div>
 
     <script>
-        // Almacenar respuestas localmente
+        // Almacenar respuestas y códigos usados
         let responses = JSON.parse(localStorage.getItem('questionnaire_responses') || '[]');
+        let usedCodes = JSON.parse(localStorage.getItem('used_access_codes') || '[]');
+        
+        // Clave secreta para acceder al CSV (cambiar por una más segura)
+        const RESEARCHER_KEY = 'EVACATANO2026';
 
-        // Total de preguntas obligatorias (excluye textarea p15 que se valida por separado)
-        const totalQuestions = 19;
+        // Total de preguntas obligatorias
+        const totalQuestions = 20;
         let answeredQuestions = new Set();
 
         // Actualizar indicador de progreso
@@ -1035,16 +1168,18 @@
             currentQuestionEl.textContent = answeredQuestions.size + 1;
         }
 
-        // Registrar respuestas para progreso
+        // Registrar respuestas para progreso (excluye access_code)
         document.querySelectorAll('select[name]').forEach(select => {
-            select.addEventListener('change', function() {
-                if (this.value) {
-                    answeredQuestions.add(this.name);
-                } else {
-                    answeredQuestions.delete(this.name);
-                }
-                updateProgress();
-            });
+            if (select.name !== 'access_code') {
+                select.addEventListener('change', function() {
+                    if (this.value) {
+                        answeredQuestions.add(this.name);
+                    } else {
+                        answeredQuestions.delete(this.name);
+                    }
+                    updateProgress();
+                });
+            }
         });
 
         document.querySelectorAll('input[type="radio"]').forEach(radio => {
@@ -1063,9 +1198,39 @@
             updateProgress();
         });
 
+        // Validar código de acceso
+        function validateAccessCode(code) {
+            // Formato: TUTOR-2026-XXXX (letras y números)
+            const codeRegex = /^TUTOR-2026-[A-Z0-9]{4}$/;
+            if (!codeRegex.test(code)) {
+                return { valid: false, message: 'Formato de código inválido. Debe ser: TUTOR-2026-XXXX' };
+            }
+            if (usedCodes.includes(code)) {
+                return { valid: false, message: 'Este código ya ha sido utilizado. Solo se permite una respuesta por código.' };
+            }
+            return { valid: true };
+        }
+
         // Validar formulario
         document.getElementById('questionnaire').addEventListener('submit', function(e) {
             e.preventDefault();
+
+            // Validar código de acceso primero
+            const accessCodeInput = document.getElementById('accessCode');
+            const codeError = document.getElementById('codeError');
+            const codeValue = accessCodeInput.value.trim().toUpperCase();
+            accessCodeInput.value = codeValue; // Convertir a mayúsculas
+            
+            const codeValidation = validateAccessCode(codeValue);
+            if (!codeValidation.valid) {
+                codeError.textContent = codeValidation.message;
+                codeError.style.display = 'block';
+                accessCodeInput.classList.add('error');
+                return;
+            } else {
+                codeError.style.display = 'none';
+                accessCodeInput.classList.remove('error');
+            }
 
             // Validar campos obligatorios
             let isValid = true;
@@ -1097,10 +1262,15 @@
             }
 
             if (isValid) {
+                // Guardar código como usado
+                usedCodes.push(codeValue);
+                localStorage.setItem('used_access_codes', JSON.stringify(usedCodes));
+
                 // Recopilar respuestas
                 const timestamp = new Date().toISOString();
                 const answer = {
                     timestamp: timestamp,
+                    access_code: codeValue,
                     p0: document.querySelector('select[name="p0"]').value,
                     p1: document.querySelector('select[name="p1"]').value,
                     p2: document.querySelector('select[name="p2"]').value,
@@ -1133,20 +1303,21 @@
             }
         });
 
-        // Exportar a CSV
+        // Exportar a CSV (solo accesible con contraseña)
         function exportCSV() {
             if (responses.length === 0) {
                 alert('No hay respuestas para exportar');
                 return;
             }
 
-            const headers = ['Timestamp', 'Centro_Asociado', 'Identidad_genero', 'Experiencia', 'Nivel_estudios', 'Formacion_previa', 'Facultad', 'Espacio_escucha', 'Preguntas_reflexion', 'Validacion_emociones', 'Conexion_teoria', 'Reformulacion_profesional', 'Identificacion_factores', 'Estilo_tutorial', 'Frecuencia_diario', 'Escenario_reflexion', 'Adaptacion_estrategias', 'Competencia_digital', 'Necesidades_mejora', 'Interes_investigacion'];
+            const headers = ['Timestamp', 'Codigo_acceso', 'Centro_Asociado', 'Identidad_genero', 'Experiencia', 'Nivel_estudios', 'Formacion_previa', 'Facultad', 'Espacio_escucha', 'Preguntas_reflexion', 'Validacion_emociones', 'Conexion_teoria', 'Reformulacion_profesional', 'Identificacion_factores', 'Estilo_tutorial', 'Frecuencia_diario', 'Escenario_reflexion', 'Adaptacion_estrategias', 'Competencia_digital', 'Necesidades_mejora', 'Interes_investigacion'];
 
             let csv = headers.join(',') + '\n';
 
             responses.forEach(r => {
                 const row = [
                     r.timestamp,
+                    `"${r.access_code}"`,
                     `"${r.p0}"`,
                     `"${r.p1}"`,
                     `"${r.p2}"`,
@@ -1173,8 +1344,42 @@
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `cuestionario_respuestas_v3_${new Date().toISOString().split('T')[0]}.csv`;
+            link.download = `cuestionario_respuestas_${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
+        }
+
+        // Acceso de investigadora (Ctrl+Shift+C para mostrar panel)
+        let researcherPanelVisible = false;
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                e.preventDefault();
+                const panel = document.getElementById('researcherPanel');
+                researcherPanelVisible = !researcherPanelVisible;
+                panel.style.display = researcherPanelVisible ? 'block' : 'none';
+            }
+        });
+
+        // Login de investigadora
+        function researcherLogin() {
+            const password = document.getElementById('researcherPassword').value;
+            const loginError = document.getElementById('loginError');
+            
+            if (password === RESEARCHER_KEY) {
+                document.getElementById('researcherLogin').style.display = 'none';
+                document.getElementById('researcherData').style.display = 'block';
+                loginError.style.display = 'none';
+                
+                // Actualizar estadísticas
+                document.getElementById('totalResponses').textContent = responses.length;
+                document.getElementById('usedCodesCount').textContent = usedCodes.length;
+                if (responses.length > 0) {
+                    const lastDate = new Date(responses[responses.length - 1].timestamp);
+                    document.getElementById('lastResponse').textContent = lastDate.toLocaleString('es-ES');
+                }
+            } else {
+                loginError.textContent = 'Contraseña incorrecta';
+                loginError.style.display = 'block';
+            }
         }
 
         // Efecto visual en opciones seleccionadas
