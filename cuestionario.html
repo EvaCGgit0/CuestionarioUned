@@ -65,6 +65,40 @@
             font-weight: 400;
         }
         
+        /* INDICADOR DE PROGRESO */
+        .progress-container {
+            background: #f0f0f0;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #74A44E 0%, #5A8A3A 100%);
+            height: 24px;
+            border-radius: 20px;
+            transition: width 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 60px;
+        }
+        
+        .progress-text {
+            color: white;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .progress-info {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
         /* FORMULARIO */
         .form-container { 
             background: white; 
@@ -424,6 +458,12 @@
         </div>
 
         <div class="form-container">
+            <div class="progress-info">Pregunta <span id="currentQuestion">1</span> de <span id="totalQuestions">18</span></div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar" style="width: 5.6%;">
+                    <span class="progress-text">6%</span>
+                </div>
+            </div>
             <form id="questionnaire">
 
                 <!-- SECCIÓN 1: Perfil del/a Tutor/a -->
@@ -607,7 +647,7 @@
                     </div>
 
                     <div class="question">
-                        <label>P7. Cuando un estudiante solo describe sin profundizar sobre su experiencia de prácticas, ¿con qué frecuencia le haces preguntas abiertas para invitarle a reflexionar? <span class="required">*</span></label>
+                        <label>P7. ¿Con qué frecuencia haces preguntas abiertas para invitar a reflexionar? <span class="required">*</span></label>
                         <div class="scale-container">
                             <div class="scale-options">
                                 <div class="scale-option">
@@ -695,6 +735,72 @@
                                 <div class="scale-option">
                                     <input type="radio" name="p9" value="5" id="p9_5">
                                     <label for="p9_5">5</label>
+                                </div>
+                            </div>
+                            <div class="scale-labels">
+                                <span>Nunca</span>
+                                <span>Siempre</span>
+                            </div>
+                        </div>
+                        <div class="error-msg">Por favor, selecciona una opción</div>
+                    </div>
+
+                    <div class="question">
+                        <label>P7b. Cuando un estudiante expresa frustración o incertidumbre sobre sus prácticas, ¿con qué frecuencia validas sus emociones antes de proponer soluciones? <span class="required">*</span></label>
+                        <div class="scale-container">
+                            <div class="scale-options">
+                                <div class="scale-option">
+                                    <input type="radio" name="p7b" value="1" id="p7b_1">
+                                    <label for="p7b_1">1</label>
+                                </div>
+                                <div class="scale-option">
+                                    <input type="radio" name="p7b" value="2" id="p7b_2">
+                                    <label for="p7b_2">2</label>
+                                </div>
+                                <div class="scale-option">
+                                    <input type="radio" name="p7b" value="3" id="p7b_3">
+                                    <label for="p7b_3">3</label>
+                                </div>
+                                <div class="scale-option">
+                                    <input type="radio" name="p7b" value="4" id="p7b_4">
+                                    <label for="p7b_4">4</label>
+                                </div>
+                                <div class="scale-option">
+                                    <input type="radio" name="p7b" value="5" id="p7b_5">
+                                    <label for="p7b_5">5</label>
+                                </div>
+                            </div>
+                            <div class="scale-labels">
+                                <span>Nunca</span>
+                                <span>Siempre</span>
+                            </div>
+                        </div>
+                        <div class="error-msg">Por favor, selecciona una opción</div>
+                    </div>
+
+                    <div class="question">
+                        <label>P9b. Cuando un estudiante presenta una experiencia compleja en sus prácticas, ¿con qué frecuencia le ayudas a identificar los factores clave que influyeron en esa situación? <span class="required">*</span></label>
+                        <div class="scale-container">
+                            <div class="scale-options">
+                                <div class="scale-option">
+                                    <input type="radio" name="p9b" value="1" id="p9b_1">
+                                    <label for="p9b_1">1</label>
+                                </div>
+                                <div class="scale-option">
+                                    <input type="radio" name="p9b" value="2" id="p9b_2">
+                                    <label for="p9b_2">2</label>
+                                </div>
+                                <div class="scale-option">
+                                    <input type="radio" name="p9b" value="3" id="p9b_3">
+                                    <label for="p9b_3">3</label>
+                                </div>
+                                <div class="scale-option">
+                                    <input type="radio" name="p9b" value="4" id="p9b_4">
+                                    <label for="p9b_4">4</label>
+                                </div>
+                                <div class="scale-option">
+                                    <input type="radio" name="p9b" value="5" id="p9b_5">
+                                    <label for="p9b_5">5</label>
                                 </div>
                             </div>
                             <div class="scale-labels">
@@ -900,13 +1006,57 @@
         // Almacenar respuestas localmente
         let responses = JSON.parse(localStorage.getItem('questionnaire_responses') || '[]');
 
+        // Total de preguntas obligatorias (excluye textarea p15 que se valida por separado)
+        const totalQuestions = 18;
+        let answeredQuestions = new Set();
+
+        // Actualizar indicador de progreso
+        function updateProgress() {
+            const percentage = Math.round((answeredQuestions.size / totalQuestions) * 100);
+            const progressBar = document.getElementById('progressBar');
+            const progressText = progressBar.querySelector('.progress-text');
+            const currentQuestionEl = document.getElementById('currentQuestion');
+            
+            progressBar.style.width = Math.max(percentage, 5.6) + '%';
+            progressText.textContent = percentage + '%';
+            currentQuestionEl.textContent = answeredQuestions.size + 1;
+        }
+
+        // Registrar respuestas para progreso
+        document.querySelectorAll('select[name]').forEach(select => {
+            select.addEventListener('change', function() {
+                if (this.value) {
+                    answeredQuestions.add(this.name);
+                } else {
+                    answeredQuestions.delete(this.name);
+                }
+                updateProgress();
+            });
+        });
+
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                answeredQuestions.add(this.name);
+                updateProgress();
+            });
+        });
+
+        document.querySelector('textarea[name="p15"]')?.addEventListener('input', function() {
+            if (this.value.length >= 10) {
+                answeredQuestions.add('p15');
+            } else {
+                answeredQuestions.delete('p15');
+            }
+            updateProgress();
+        });
+
         // Validar formulario
         document.getElementById('questionnaire').addEventListener('submit', function(e) {
             e.preventDefault();
 
             // Validar campos obligatorios
             let isValid = true;
-            const questions = ['p0', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9', 'p10', 'p11', 'p12', 'p13', 'p14', 'p16'];
+            const questions = ['p0', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p7b', 'p8', 'p9', 'p9b', 'p10', 'p11', 'p12', 'p13', 'p14', 'p16'];
 
             questions.forEach(q => {
                 const selected = document.querySelector(`input[name="${q}"]:checked`) || document.querySelector(`select[name="${q}"]`);
@@ -946,8 +1096,10 @@
                     p5: document.querySelector('select[name="p5"]').value,
                     p6: document.querySelector('input[name="p6"]:checked')?.value || '',
                     p7: document.querySelector('input[name="p7"]:checked')?.value || '',
+                    p7b: document.querySelector('input[name="p7b"]:checked')?.value || '',
                     p8: document.querySelector('input[name="p8"]:checked')?.value || '',
                     p9: document.querySelector('input[name="p9"]:checked')?.value || '',
+                    p9b: document.querySelector('input[name="p9b"]:checked')?.value || '',
                     p10: document.querySelector('input[name="p10"]:checked')?.value || '',
                     p11: document.querySelector('input[name="p11"]:checked')?.value || '',
                     p12: document.querySelector('input[name="p12"]:checked')?.value || '',
@@ -963,6 +1115,8 @@
 
                 // Mostrar mensaje de éxito
                 document.getElementById('questionnaire').style.display = 'none';
+                document.querySelector('.progress-container').style.display = 'none';
+                document.querySelector('.progress-info').style.display = 'none';
                 document.getElementById('successMessage').style.display = 'block';
             }
         });
@@ -974,7 +1128,7 @@
                 return;
             }
 
-            const headers = ['Timestamp', 'Centro_Asociado', 'Identidad_genero', 'Experiencia', 'Nivel_estudios', 'Formacion_previa', 'Facultad', 'Espacio_escucha', 'Preguntas_reflexion', 'Conexion_teoria', 'Reformulacion_profesional', 'Estilo_tutorial', 'Frecuencia_diario', 'Escenario_reflexion', 'Adaptacion_estrategias', 'Competencia_digital', 'Necesidades_mejora', 'Interes_investigacion'];
+            const headers = ['Timestamp', 'Centro_Asociado', 'Identidad_genero', 'Experiencia', 'Nivel_estudios', 'Formacion_previa', 'Facultad', 'Espacio_escucha', 'Preguntas_reflexion', 'Validacion_emociones', 'Conexion_teoria', 'Reformulacion_profesional', 'Identificacion_factores', 'Estilo_tutorial', 'Frecuencia_diario', 'Escenario_reflexion', 'Adaptacion_estrategias', 'Competencia_digital', 'Necesidades_mejora', 'Interes_investigacion'];
 
             let csv = headers.join(',') + '\n';
 
@@ -989,8 +1143,10 @@
                     `"${r.p5}"`,
                     r.p6,
                     r.p7,
+                    r.p7b,
                     r.p8,
                     r.p9,
+                    r.p9b,
                     `"${r.p10}"`,
                     r.p11,
                     `"${r.p12}"`,
@@ -1005,7 +1161,7 @@
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `cuestionario_respuestas_v2_${new Date().toISOString().split('T')[0]}.csv`;
+            link.download = `cuestionario_respuestas_v3_${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
         }
 
@@ -1017,6 +1173,9 @@
                 this.closest('.radio-option, .scale-option, .metaphor-option, .color-option')?.classList.add('selected');
             });
         });
+
+        // Inicializar progreso
+        updateProgress();
     </script>
 </body>
 </html>
